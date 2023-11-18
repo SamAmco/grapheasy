@@ -512,7 +512,6 @@ private fun setXAxisNumLabels(
 ) {
     val displayMetrics = context.resources.displayMetrics
     val dpWidth = binding.xyPlot.width / displayMetrics.density
-
     if (dpWidth < 0.1f) return
 
     val maxLabels = (dpWidth / 30.0).toInt().toDouble()
@@ -525,7 +524,9 @@ private fun setXAxisNumLabels(
         }
     }
 
-    binding.xyPlot.setDomainStep(StepMode.SUBDIVIDE, min((xStep + 1).toDouble(), maxLabels))
+    val subdivisions = min((xStep + 1).toDouble(), maxLabels)
+
+    binding.xyPlot.setDomainStep(StepMode.SUBDIVIDE, subdivisions)
 }
 
 private fun setBarChartBounds(binding: GraphXyPlotBinding, bounds: RectRegion) {

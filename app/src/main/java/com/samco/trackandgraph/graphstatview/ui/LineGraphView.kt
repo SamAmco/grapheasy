@@ -34,7 +34,6 @@ import com.samco.trackandgraph.base.database.dto.LineGraphPointStyle
 import com.samco.trackandgraph.base.database.dto.YRangeType
 import com.samco.trackandgraph.base.helpers.formatDayMonth
 import com.samco.trackandgraph.base.helpers.formatMonthYear
-import com.samco.trackandgraph.base.helpers.formatTimeDuration
 import com.samco.trackandgraph.databinding.GraphXyPlotBinding
 import com.samco.trackandgraph.graphstatview.factories.viewdto.ILineGraphViewData
 import com.samco.trackandgraph.ui.dataVisColorList
@@ -42,6 +41,7 @@ import com.samco.trackandgraph.util.getColorFromAttr
 import org.threeten.bp.Duration
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.Temporal
 import java.text.DecimalFormat
@@ -51,7 +51,6 @@ import java.text.ParsePosition
 import kotlin.math.abs
 import kotlin.math.log10
 import kotlin.math.max
-import kotlin.math.roundToLong
 
 @Composable
 fun LineGraphView(
@@ -88,6 +87,8 @@ fun LineGraphBodyView(
 
     val context = LocalContext.current
 
+    val zonedEndTime = viewData.endTime.atZoneSameInstant(ZoneId.systemDefault())
+
     AndroidViewBinding(factory = { inflater, parent, attachToParent ->
         val binding = GraphXyPlotBinding.inflate(inflater, parent, attachToParent)
 
@@ -97,17 +98,16 @@ fun LineGraphBodyView(
         )
         binding.xyPlot.clear()
 
-
         drawLineGraphFeatures(
             context = context,
             binding = binding,
             plottableData = viewData.plottableData,
             listMode = listMode,
         )
-        setUpLineGraphXAxis(
+        setXAxisFormatting(
             context = context,
             binding = binding,
-            endTime = viewData.endTime,
+            zonedEndTime = zonedEndTime
         )
         setUpXYPlotYAxis(
             binding = binding,
@@ -119,7 +119,7 @@ fun LineGraphBodyView(
             binding = binding,
             bounds = viewData.bounds,
             yRangeType = viewData.yRangeType,
-            endTime = viewData.endTime,
+            zonedEndTime = zonedEndTime,
             listMode = listMode
         )
 
@@ -129,10 +129,15 @@ fun LineGraphBodyView(
 
         return@AndroidViewBinding binding
     }, update = {
+        setXNumLabels(
+            context = context,
+            binding = this,
+            bounds = viewData.bounds
+        )
         setTimeMarker(
             context = context,
             binding = this,
-            endTime = viewData.endTime,
+            endTime = zonedEndTime,
             timeMarker = timeMarker
         )
 
@@ -160,7 +165,7 @@ private fun setLineGraphBounds(
     binding: GraphXyPlotBinding,
     bounds: RectRegion,
     yRangeType: YRangeType,
-    endTime: OffsetDateTime,
+    zonedEndTime: ZonedDateTime,
     listMode: Boolean
 ) {
     // since we now calculate the bounds to fit the number of intervals we almost always want
@@ -175,7 +180,7 @@ private fun setLineGraphBounds(
         context = context,
         binding = binding,
         bounds = bounds,
-        endTime = endTime,
+        zonedEndTime = zonedEndTime
     )
 }
 
@@ -183,7 +188,7 @@ private fun setLineGraphPaddingFromBounds(
     context: Context,
     binding: GraphXyPlotBinding,
     bounds: RectRegion,
-    endTime: OffsetDateTime
+    zonedEndTime: ZonedDateTime
 ) {
     //Set up Y padding
     val minY = bounds.minY.toDouble()
@@ -197,19 +202,18 @@ private fun setLineGraphPaddingFromBounds(
     val formattedTimestamp = getDateTimeFormattedForDuration(
         context = context,
         binding = binding,
-        endTime = endTime,
+        zonedEndTime = zonedEndTime
     )
     binding.xyPlot.graph.paddingBottom =
         formattedTimestamp.length * (context.resources.displayMetrics.scaledDensity)
 }
 
-private fun setUpLineGraphXAxis(
+private fun setXAxisFormatting(
     context: Context,
     binding: GraphXyPlotBinding,
-    endTime: OffsetDateTime
+    zonedEndTime: ZonedDateTime
 ) {
     binding.xyPlot.domainTitle.text = ""
-    binding.xyPlot.setDomainStep(StepMode.SUBDIVIDE, 11.0)
     binding.xyPlot.graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).format =
         object : Format() {
             override fun format(
@@ -224,7 +228,7 @@ private fun setUpLineGraphXAxis(
                     context,
                     binding,
                     duration,
-                    endTime
+                    zonedEndTime
                 )
                 return toAppendTo.append(formattedTimestamp)
             }
@@ -233,15 +237,65 @@ private fun setUpLineGraphXAxis(
         }
 }
 
+val acceptableXAxisIntervals = listOf(
+    1000L,//Seconds
+    60_000L,//Minutes
+    60* 60 * 1000L,//Hours
+    2 * 60 * 60 * 1000L,//2 Hours
+    3 * 60 * 60 * 1000L,//3 Hours
+    4 * 60 * 60 * 1000L,//4 Hours
+    5 * 60 * 60 * 1000L,//5 Hours
+    6 * 60 * 60 * 1000L,//6 Hours
+    8 * 60 * 60 * 1000L,//8 Hours
+    12 * 60 * 60 * 1000L,//12 Hours
+    24 * 60 * 60 * 1000L,//Days
+    7 * 24 * 60 * 60 * 1000L,//Weeks
+)
+
+private fun setXNumLabels(
+    context: Context,
+    binding: GraphXyPlotBinding,
+    bounds: RectRegion
+) {
+    val displayMetrics = context.resources.displayMetrics
+    val dpWidth = binding.xyPlot.width / displayMetrics.density
+    val maxLabels = (dpWidth / 30.0).toInt().toLong()
+
+    println("samsam: dpWidth: $dpWidth, maxLabels: $maxLabels, density: ${displayMetrics.density}")
+
+    val domainSize = bounds.maxX.toLong() - bounds.minX.toLong()
+
+    if (maxLabels < 1 || domainSize < 1000) {
+        binding.xyPlot.setDomainStep(StepMode.SUBDIVIDE, 11.0)
+        return
+    }
+
+    //TODO comment this to explain it
+    //TODO this is not yet correct. Although the intervals should hypothetically be correct
+    // the markers will not necessarily fall on good places (e.g. 12:00 exactly) .. To do this
+    // you also need to calculate an offset that needs to be added to say the first one such that
+    // each marker there after will fall on a good place.
+    //TODO also tbh it would be reeeeally nice to support months and even years. These get tricky though
+    // because they are periods not durations so you'd need some custom stepping logic as it's not always
+    // the same
+    val interval = if (domainSize / maxLabels > acceptableXAxisIntervals.last()) {
+        acceptableXAxisIntervals.last() * (domainSize / (maxLabels * acceptableXAxisIntervals.last()))
+    } else {
+        acceptableXAxisIntervals.first { (domainSize / it) < maxLabels }
+    }
+
+    println("samsam using interval: $interval")
+
+    binding.xyPlot.setDomainStep(StepMode.INCREMENT_BY_VAL, interval.toDouble())
+}
+
 private fun getDateTimeFormattedForDuration(
     context: Context,
     binding: GraphXyPlotBinding,
     duration: Duration = Duration.ZERO,
-    endTime: OffsetDateTime
+    zonedEndTime: ZonedDateTime
 ): String {
-    val timestamp = endTime
-        .atZoneSameInstant(ZoneId.systemDefault())
-        .plus(duration)
+    val timestamp = zonedEndTime.plus(duration)
     val minX = binding.xyPlot.bounds.minX
     val maxX = binding.xyPlot.bounds.maxX
     if (minX == null || maxX == null) return formatDayMonth(context, timestamp)
