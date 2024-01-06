@@ -28,9 +28,11 @@ import com.samco.trackandgraph.base.database.dto.Group
 import com.samco.trackandgraph.base.model.DataInteractor
 import com.samco.trackandgraph.ui.dataVisColorList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,6 +43,7 @@ interface AddGroupDialogViewModel {
     val hidden: Boolean
     val loading: Boolean
 
+    val updateMode: StateFlow<Boolean>
     val addEnabled: StateFlow<Boolean>
 
     fun show(parentGroupId: Long?, groupId: Long?)
@@ -67,7 +70,7 @@ class AddGroupDialogViewModelImpl @Inject constructor(
         private set
 
     private var parentGroupId: Long? = null
-    private var currentGroup: Group? = null
+    private var currentGroup = MutableStateFlow<Group?>(null)
 
     override val addEnabled: StateFlow<Boolean> = combine(
         snapshotFlow { colorIndex },
@@ -75,6 +78,10 @@ class AddGroupDialogViewModelImpl @Inject constructor(
     ) { colorIndex, name ->
         colorIndex in dataVisColorList.indices && name.text.isNotBlank()
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    override val updateMode: StateFlow<Boolean> = currentGroup
+        .map { it != null }
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     override fun show(parentGroupId: Long?, groupId: Long?) {
         colorIndex = 0
@@ -86,13 +93,13 @@ class AddGroupDialogViewModelImpl @Inject constructor(
             viewModelScope.launch {
                 loading = true
                 val group = dataInteractor.getGroupById(groupId)
-                this@AddGroupDialogViewModelImpl.currentGroup = group
+                this@AddGroupDialogViewModelImpl.currentGroup.value = group
                 colorIndex = group.colorIndex
                 name = TextFieldValue(group.name, TextRange(group.name.length))
                 loading = false
             }
         } else {
-            this.currentGroup = null
+            this.currentGroup.value = null
         }
     }
 
@@ -101,7 +108,7 @@ class AddGroupDialogViewModelImpl @Inject constructor(
         val name = name.text
         val colorIndex = colorIndex
         viewModelScope.launch {
-            currentGroup?.let { current ->
+            currentGroup.value?.let { current ->
                 dataInteractor.updateGroup(
                     Group(
                         id = current.id,
