@@ -18,15 +18,10 @@ package com.samco.trackandgraph.graphstatinput.configviews.ui
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,71 +49,64 @@ fun TimeHistogramConfigView(
         viewModel.getConfigFlow().collect { onConfigEvent(it) }
     }
 
-    GraphStatDurationSpinner(
-        modifier = Modifier,
-        selectedDuration = viewModel.selectedDuration,
-        onDurationSelected = { viewModel.updateDuration(it) }
-    )
+    FormSection {
+        Column {
+            GraphStatDurationSpinner(
+                modifier = Modifier,
+                selectedDuration = viewModel.selectedDuration,
+                onDurationSelected = { viewModel.updateDuration(it) }
+            )
 
-    GraphStatEndingAtSpinner(
-        modifier = Modifier,
-        sampleEndingAt = viewModel.sampleEndingAt
-    ) { viewModel.updateSampleEndingAt(it) }
+            FormFieldSeparator()
 
-    SpacingSmall()
+            GraphStatEndingAtSpinner(
+                modifier = Modifier,
+                sampleEndingAt = viewModel.sampleEndingAt
+            ) { viewModel.updateSampleEndingAt(it) }
+        }
+    }
 
-    Divider()
+    FormFieldSeparator()
 
-    SpacingLarge()
-
-    Text(
-        modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.card_padding)),
-        text = stringResource(id = R.string.select_a_feature),
-        style = MaterialTheme.typography.subtitle2
-    )
+    FormLabel(text = stringResource(id = R.string.select_a_feature))
 
     val featureId = viewModel.featureId
     val featureMap = viewModel.featureMap
 
     if (featureId != null && featureMap != null) {
-        TextMapSpinner(
+        FormSpinner(
             strings = featureMap,
             selectedItem = featureId,
             onItemSelected = { viewModel.updateFeatureId(it) }
         )
     }
 
-    SpacingSmall()
+    FormFieldSeparator()
 
-    LabeledRow(
-        label = stringResource(id = R.string.time_window_size),
-        paddingValues = PaddingValues(start = dimensionResource(id = R.dimen.card_padding))
-    ) {
-        val stringArray = stringArrayResource(id = R.array.time_histogram_windows)
-        val timeWindows = mapOf(
-            TimeHistogramWindow.HOUR to stringArray[0],
-            TimeHistogramWindow.DAY to stringArray[1],
-            TimeHistogramWindow.WEEK to stringArray[2],
-            TimeHistogramWindow.MONTH to stringArray[3],
-            TimeHistogramWindow.THREE_MONTHS to stringArray[4],
-            TimeHistogramWindow.SIX_MONTHS to stringArray[5],
-            TimeHistogramWindow.YEAR to stringArray[6]
-        )
+    FormLabel(text = stringResource(id = R.string.time_window_size))
 
-        TextMapSpinner(
-            strings = timeWindows,
-            selectedItem = viewModel.selectedWindow,
-            onItemSelected = { viewModel.updateWindow(it) }
-        )
-    }
+    val stringArray = stringArrayResource(id = R.array.time_histogram_windows)
+    val timeWindows = remember { mapOf(
+        TimeHistogramWindow.HOUR to stringArray[0],
+        TimeHistogramWindow.DAY to stringArray[1],
+        TimeHistogramWindow.WEEK to stringArray[2],
+        TimeHistogramWindow.MONTH to stringArray[3],
+        TimeHistogramWindow.THREE_MONTHS to stringArray[4],
+        TimeHistogramWindow.SIX_MONTHS to stringArray[5],
+        TimeHistogramWindow.YEAR to stringArray[6]
+    )}
 
-    SpacingSmall()
+    FormSpinner(
+        strings = timeWindows,
+        selectedItem = viewModel.selectedWindow,
+        onItemSelected = { viewModel.updateWindow(it) }
+    )
 
-    RowCheckbox(
+    FormFieldSeparator()
+
+    FormSwitchInput(
         checked = viewModel.sumByCount,
         onCheckedChange = { viewModel.updateSumByCount(it) },
         text = stringResource(id = R.string.sum_by_count_checkbox_label)
     )
-
-    SpacingSmall()
 }

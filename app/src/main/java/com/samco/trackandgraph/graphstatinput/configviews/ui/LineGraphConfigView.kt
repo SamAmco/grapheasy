@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.*
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.samco.trackandgraph.R
@@ -52,38 +51,43 @@ fun LineGraphConfigView(
     val viewModel = hiltViewModel<LineGraphConfigViewModel>(viewModelStoreOwner).apply {
         initFromGraphStatId(graphStatId)
     }
-
     LaunchedEffect(viewModel) {
         viewModel.getConfigFlow().collect { onConfigEvent(it) }
     }
 
-    GraphStatDurationSpinner(
-        modifier = Modifier,
-        selectedDuration = viewModel.selectedDuration,
-        onDurationSelected = { viewModel.updateDuration(it) }
-    )
+    FormSection {
+        Column {
 
-    GraphStatEndingAtSpinner(
-        modifier = Modifier,
-        sampleEndingAt = viewModel.sampleEndingAt
-    ) { viewModel.updateSampleEndingAt(it) }
+            GraphStatDurationSpinner(
+                modifier = Modifier,
+                selectedDuration = viewModel.selectedDuration,
+                onDurationSelected = { viewModel.updateDuration(it) }
+            )
 
-    GraphStatYRangeTypeSpinner(
-        yRangeType = viewModel.yRangeType,
-        onYRangeTypeSelected = { viewModel.updateYRangeType(it) }
-    )
+            FormFieldSeparator()
 
-    if (viewModel.yRangeType == YRangeType.FIXED) YRangeFromToInputs(viewModel)
+            GraphStatEndingAtSpinner(
+                modifier = Modifier,
+                sampleEndingAt = viewModel.sampleEndingAt
+            ) { viewModel.updateSampleEndingAt(it) }
 
-    SpacingSmall()
+            FormFieldSeparator()
 
-    Divider()
+            GraphStatYRangeTypeSpinner(
+                yRangeType = viewModel.yRangeType,
+                onYRangeTypeSelected = { viewModel.updateYRangeType(it) }
+            )
 
-    SpacingSmall()
+            if (viewModel.yRangeType == YRangeType.FIXED) {
+                FormFieldSeparator()
+                YRangeFromToInputs(viewModel)
+            }
+        }
+    }
+
+    FormFieldSeparator()
 
     LineGraphFeaturesInputView(scrollState, viewModel)
-
-    SpacingSmall()
 }
 
 @Composable
@@ -134,7 +138,7 @@ private fun LineGraphFeatureInputView(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding)),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            FullWidthTextField(
+            FormTextInput(
                 modifier = Modifier.weight(1f),
                 textFieldValue = textFields.name,
                 onValueChange = { textFields.updateName(it) }
@@ -146,7 +150,9 @@ private fun LineGraphFeatureInputView(
                 )
             }
         }
-        SpacingExtraSmall()
+
+        FormFieldSeparator()
+
         Row(modifier = Modifier.height(IntrinsicSize.Max)) {
             Column(
                 modifier = Modifier.fillMaxHeight(),
@@ -200,7 +206,7 @@ private fun LineGraphFeatureInputView(
                     )
                 }
 
-                TextMapSpinner(
+                FormSpinner(
                     strings = featureNames,
                     selectedItem = selectedItem,
                     onItemSelected = {
@@ -213,59 +219,42 @@ private fun LineGraphFeatureInputView(
                     }
                 )
 
+                FormFieldSeparator()
+
                 val averagingModeNames =
                     stringArrayResource(id = R.array.line_graph_averaging_mode_names)
                         .mapIndexed { index, name -> index to name }
                         .associate { (index, name) -> LineGraphAveraginModes.values()[index] to name }
 
-                TextMapSpinner(
+                FormSpinner(
                     strings = averagingModeNames,
                     selectedItem = lgf.averagingMode,
                     onItemSelected = { onUpdate(lgf.copy(averagingMode = it)) }
                 )
 
+                FormFieldSeparator()
+
                 val plotModeNames = stringArrayResource(id = R.array.line_graph_plot_mode_names)
                     .mapIndexed { index, name -> index to name }
                     .associate { (index, name) -> LineGraphPlottingModes.values()[index] to name }
 
-                TextMapSpinner(
+                FormSpinner(
                     strings = plotModeNames,
                     selectedItem = lgf.plottingMode,
                     onItemSelected = { onUpdate(lgf.copy(plottingMode = it)) }
                 )
-                Row {
-                    Text(
-                        modifier = Modifier.alignByBaseline(),
-                        text = stringResource(id = R.string.offset),
-                        style = MaterialTheme.typography.body1
-                    )
 
-                    MiniNumericTextField(
-                        modifier = Modifier
-                            .weight(1f)
-                            .alignByBaseline(),
-                        textAlign = TextAlign.Center,
-                        textFieldValue = textFields.offset,
-                        onValueChange = { textFields.updateOffset(it) }
-                    )
+                FormFieldSeparator()
 
-                    SpacingSmall()
-
-                    Text(
-                        modifier = Modifier.alignByBaseline(),
-                        text = stringResource(id = R.string.scale),
-                        style = MaterialTheme.typography.body1
-                    )
-
-                    MiniNumericTextField(
-                        modifier = Modifier
-                            .weight(1f)
-                            .alignByBaseline(),
-                        textAlign = TextAlign.Center,
-                        textFieldValue = textFields.scale,
-                        onValueChange = { textFields.updateScale(it) }
-                    )
-                }
+                FormTwoPartsTextInput(
+                    firstFieldValue = textFields.offset,
+                    secondFieldValue = textFields.scale,
+                    onFirstValueChange = { textFields.updateOffset(it) },
+                    onSecondValueChange = { textFields.updateScale(it) },
+                    firstLabel = stringResource(id = R.string.offset),
+                    secondLabel = stringResource(id = R.string.scale),
+                    isNumeric = true
+                )
             }
         }
     }

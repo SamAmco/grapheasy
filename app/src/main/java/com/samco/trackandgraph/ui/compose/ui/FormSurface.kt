@@ -16,35 +16,36 @@
  */
 package com.samco.trackandgraph.ui.compose.ui
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import com.samco.trackandgraph.R
+import com.samco.trackandgraph.ui.compose.theming.tngColors
 
 @Composable
-fun AddCreateBar(
-    errorText: Int?
-) = Surface(
-    modifier = Modifier.fillMaxWidth()
+fun FormSurface(
+    scrollState: ScrollState = rememberScrollState(),
+    content: @Composable () -> Unit
 ) {
-    if (errorText != null)
-    {
-        Text(
-            text = errorText?.let { stringResource(id = it) } ?: "",
-            color = MaterialTheme.colors.error,
-            fontSize = MaterialTheme.typography.body2.fontSize,
-            fontWeight = MaterialTheme.typography.body2.fontWeight,
+    Surface(
+        color = MaterialTheme.tngColors.background,
+        modifier = Modifier
+            .fillMaxHeight()
+            .verticalScroll(state = scrollState)
+    ) {
+        Box(
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        )
+                .padding(dimensionResource(id = R.dimen.form_padding))
+        ) {
+            content()
+        }
     }
 }
-

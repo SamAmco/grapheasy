@@ -16,20 +16,17 @@
  */
 package com.samco.trackandgraph.graphstatinput.customviews
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.base.helpers.formatDayMonthYear
 import com.samco.trackandgraph.ui.compose.compositionlocals.LocalSettings
-import com.samco.trackandgraph.ui.compose.ui.LabeledRow
-import com.samco.trackandgraph.ui.compose.ui.Spinner
+import com.samco.trackandgraph.ui.compose.ui.FormLabel
+import com.samco.trackandgraph.ui.compose.ui.FormSpinner
 import com.samco.trackandgraph.ui.compose.ui.showDateDialog
 import org.threeten.bp.OffsetDateTime
 
@@ -64,59 +61,42 @@ fun GraphStatEndingAtSpinner(
     sampleEndingAt: SampleEndingAt,
     onSampleEndingAtChanged: (SampleEndingAt) -> Unit
 ) {
-    LabeledRow(
-        label = stringResource(id = R.string.ending_at_colon),
-        paddingValues = PaddingValues(start = dimensionResource(id = R.dimen.card_padding))
-    ) {
-        val strings = stringArrayResource(id = R.array.ending_at_values)
+    FormLabel(text = stringResource(id = R.string.ending_at_colon))
 
-        val spinnerItems = mapOf(
-            SampleEndingAtOption.LATEST to strings[0],
-            SampleEndingAtOption.CUSTOM to strings[1]
-        )
+    val strings = stringArrayResource(id = R.array.ending_at_values)
 
-        val context = LocalContext.current
-        val firstDayOfWeek = LocalSettings.current.firstDayOfWeek
+    val spinnerItems = remember { mapOf(
+        SampleEndingAtOption.LATEST to strings[0],
+        SampleEndingAtOption.CUSTOM to strings[1]
+    )}
 
-        Spinner(
-            modifier = modifier,
-            items = spinnerItems.keys.toList(),
-            selectedItem = sampleEndingAt.option,
-            onItemSelected = { option ->
-                when (option) {
-                    SampleEndingAtOption.LATEST -> onSampleEndingAtChanged(SampleEndingAt.Latest)
-                    SampleEndingAtOption.CUSTOM -> showDateDialog(
-                        context = context,
-                        firstDayOfWeek = firstDayOfWeek,
-                        onDateSelected = {
-                            onSampleEndingAtChanged(SampleEndingAt.Custom(it))
-                        }
-                    )
-                }
-            },
-            selectedItemFactory = { modifier, item, expanded ->
-                val text = when (item) {
-                    SampleEndingAtOption.LATEST -> strings[0]
-                    SampleEndingAtOption.CUSTOM -> {
-                        val dateTime = (sampleEndingAt as SampleEndingAt.Custom).dateTime
-                        dateTime?.let { formatDayMonthYear(context, it) } ?: strings[1]
+    val context = LocalContext.current
+    val firstDayOfWeek = LocalSettings.current.firstDayOfWeek
+
+    FormSpinner(
+        modifier = modifier,
+        strings = spinnerItems,
+        selectedItem = sampleEndingAt.option,
+        onItemSelected = { option ->
+            when (option) {
+                SampleEndingAtOption.LATEST -> onSampleEndingAtChanged(SampleEndingAt.Latest)
+                SampleEndingAtOption.CUSTOM -> showDateDialog(
+                    context = context,
+                    firstDayOfWeek = firstDayOfWeek,
+                    onDateSelected = {
+                        onSampleEndingAtChanged(SampleEndingAt.Custom(it))
                     }
-                }
-
-                Text(
-                    modifier = modifier.weight(1f),
-                    text = text,
-                    fontSize = MaterialTheme.typography.body1.fontSize,
-                    fontWeight = MaterialTheme.typography.body1.fontWeight,
-                )
-            },
-            dropdownItemFactory = { item, _ ->
-                Text(
-                    text = spinnerItems[item] ?: "",
-                    fontSize = MaterialTheme.typography.body1.fontSize,
-                    fontWeight = MaterialTheme.typography.body1.fontWeight
                 )
             }
-        )
-    }
+        },
+        selectedItemTransform = { item ->
+            when (item) {
+                SampleEndingAtOption.LATEST -> strings[0]
+                SampleEndingAtOption.CUSTOM -> {
+                    val dateTime = (sampleEndingAt as SampleEndingAt.Custom).dateTime
+                    dateTime?.let { formatDayMonthYear(context, it) } ?: strings[1]
+                }
+            }
+        }
+    )
 }

@@ -17,27 +17,17 @@
 
 package com.samco.trackandgraph.graphstatinput.customviews
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.graphstatinput.configviews.behaviour.YRangeConfigBehaviour
-import com.samco.trackandgraph.ui.compose.ui.DurationInput
-import com.samco.trackandgraph.ui.compose.ui.MiniNumericTextField
+import com.samco.trackandgraph.ui.compose.ui.FormDurationInput
+import com.samco.trackandgraph.ui.compose.ui.FormFieldSeparator
+import com.samco.trackandgraph.ui.compose.ui.FormLabel
+import com.samco.trackandgraph.ui.compose.ui.FormTextInput
+import com.samco.trackandgraph.ui.compose.ui.FormTwoPartsTextInput
 
 @Composable
 fun YRangeFromToInputs(
@@ -52,86 +42,60 @@ fun YRangeFromToInputs(
     else NumericRangeInputs(viewModel, fromEnabled, toText)
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun TimeBasedRangeInputs(
     viewModel: YRangeConfigBehaviour,
     fromEnabled: Boolean,
     toText: String
-) = Column(
-    modifier = Modifier
-        .padding(horizontal = dimensionResource(id = R.dimen.card_padding))
-        .fillMaxWidth(),
-    horizontalAlignment = Alignment.CenterHorizontally
 ) {
-
     if (fromEnabled) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(id = R.string.from),
-                style = MaterialTheme.typography.subtitle2
-            )
-
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.dialog_input_spacing)))
-
-            DurationInput(
-                viewModel = viewModel.yRangeFromDurationViewModel,
-                nextFocusDirection = FocusDirection.Down,
-            )
-        }
-    }
-
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = toText,
-            style = MaterialTheme.typography.subtitle2
+        FormLabel(text = stringResource(id = R.string.from))
+        FormDurationInput(
+            hoursFieldValue = viewModel.yRangeFromDurationViewModel.hours,
+            minutesFieldValue = viewModel.yRangeFromDurationViewModel.minutes,
+            secondsFieldValue = viewModel.yRangeFromDurationViewModel.seconds,
+            onHoursValueChange = viewModel.yRangeFromDurationViewModel::setHoursText,
+            onMinutesValueChange = viewModel.yRangeFromDurationViewModel::setMinutesText,
+            onSecondsValueChange = viewModel.yRangeFromDurationViewModel::setSecondsText
         )
-
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.dialog_input_spacing)))
-
-        DurationInput(viewModel = viewModel.yRangeToDurationViewModel)
+        FormFieldSeparator()
     }
+
+    FormLabel(text = toText)
+    FormDurationInput(
+        hoursFieldValue = viewModel.yRangeToDurationViewModel.hours,
+        minutesFieldValue = viewModel.yRangeToDurationViewModel.minutes,
+        secondsFieldValue = viewModel.yRangeToDurationViewModel.seconds,
+        onHoursValueChange = viewModel.yRangeToDurationViewModel::setHoursText,
+        onMinutesValueChange = viewModel.yRangeToDurationViewModel::setMinutesText,
+        onSecondsValueChange = viewModel.yRangeToDurationViewModel::setSecondsText
+    )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun NumericRangeInputs(
     viewModel: YRangeConfigBehaviour,
     fromEnabled: Boolean,
     toText: String
-) = Row(
-    modifier = Modifier
-        .padding(horizontal = dimensionResource(id = R.dimen.card_padding))
-        .fillMaxWidth(),
-    horizontalArrangement = Arrangement.SpaceEvenly
 ) {
     if (fromEnabled) {
-        Text(
-            modifier = Modifier.alignByBaseline(),
-            text = stringResource(id = R.string.from),
-            style = MaterialTheme.typography.subtitle2
+        FormTwoPartsTextInput(
+            firstFieldValue = viewModel.yRangeFrom,
+            secondFieldValue = viewModel.yRangeTo,
+            onFirstValueChange = { viewModel.updateYRangeFrom(it) },
+            onSecondValueChange = { viewModel.updateYRangeTo(it) },
+            firstLabel = stringResource(id = R.string.from),
+            secondLabel = toText,
+            isNumeric = true
         )
-
-        MiniNumericTextField(
-            modifier = Modifier
-                .weight(1f)
-                .alignByBaseline(),
-            textAlign = TextAlign.Center,
-            textFieldValue = viewModel.yRangeFrom,
-            onValueChange = { viewModel.updateYRangeFrom(it) }
+    } else {
+        FormLabel(text = toText)
+        FormTextInput(
+            textFieldValue = viewModel.yRangeTo,
+            onValueChange = { viewModel.updateYRangeTo(it) },
+            isNumeric = true
         )
     }
-
-    Text(
-        modifier = Modifier.alignByBaseline(),
-        text = toText,
-        style = MaterialTheme.typography.subtitle2
-    )
-
-    MiniNumericTextField(
-        modifier = Modifier
-            .weight(1f)
-            .alignByBaseline(),
-        textAlign = TextAlign.Center,
-        textFieldValue = viewModel.yRangeTo,
-        onValueChange = { viewModel.updateYRangeTo(it) }
-    )
 }

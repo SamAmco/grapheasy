@@ -35,12 +35,10 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.base.database.dto.*
 import com.samco.trackandgraph.graphstatinput.configviews.ui.*
-import com.samco.trackandgraph.graphstatinput.configviews.viewmodel.*
 import com.samco.trackandgraph.graphstatview.factories.viewdto.IGraphStatViewData
 import com.samco.trackandgraph.graphstatview.ui.GraphStatCardView
 import com.samco.trackandgraph.ui.compose.theming.tngColors
@@ -63,11 +61,16 @@ internal fun GraphStatInputView(
                 var demoYOffset by remember { mutableStateOf(0f) }
                 var demoVisible by remember { mutableStateOf(false) }
 
+                val errorMessageId = viewModel.validationException.observeAsState().value?.errorMessageId
+                val isInUpdateMode = viewModel.updateMode.observeAsState().value ?: false
+
                 Box(modifier = Modifier.weight(1f)) {
                     GraphStatInputViewForm(
                         viewModelStoreOwner = viewModelStoreOwner,
                         viewModel = viewModel,
-                        graphStatId = graphStatId
+                        graphStatId = graphStatId,
+                        isInUpdateMode = isInUpdateMode,
+                        isInErrorState = (errorMessageId != null)
                     )
 
                     if (demoVisible) demoViewData?.let { DemoOverlay(demoYOffset, it) }
@@ -82,11 +85,7 @@ internal fun GraphStatInputView(
                         onDragOffset = { demoYOffset -= it })
                 }
 
-                AddCreateBar(
-                    errorText = viewModel.validationException.observeAsState().value?.errorMessageId,
-                    onCreateUpdateClicked = viewModel::createGraphOrStat,
-                    isUpdateMode = viewModel.updateMode.observeAsState().value ?: false
-                )
+                AddCreateBar(errorMessageId)
             }
 
             if (loading.value) LoadingOverlay()
@@ -179,44 +178,47 @@ private fun GraphStatInputViewForm(
     viewModelStoreOwner: ViewModelStoreOwner,
     viewModel: GraphStatInputViewModel,
     graphStatId: Long,
-    scrollState: ScrollState = rememberScrollState()
-) = Column(
-    modifier = modifier
-        .padding(
-            top = dimensionResource(id = R.dimen.card_padding),
-            start = dimensionResource(id = R.dimen.card_padding),
-            end = dimensionResource(id = R.dimen.card_padding)
+    scrollState: ScrollState = rememberScrollState(),
+    isInErrorState: Boolean,
+    isInUpdateMode: Boolean
+) = FormSurface (scrollState = scrollState) {
+    Column {
+        FormLabel(text = stringResource(id = R.string.graph_or_stat_name))
+        FormTextInput(
+            textFieldValue = viewModel.graphName,
+            onValueChange = { viewModel.setGraphStatName(it) }
         )
-        .verticalScroll(state = scrollState)
-) {
 
-    FullWidthTextField(
-        textFieldValue = viewModel.graphName,
-        onValueChange = { viewModel.setGraphStatName(it) },
-        label = stringResource(id = R.string.graph_or_stat_name)
-    )
+        val updateMode = viewModel.updateMode.observeAsState(false)
+        if (!updateMode.value) {
+            FormFieldSeparator()
 
-    SpacingSmall()
+            FormLabel(text = stringResource(id = R.string.graph_type_label))
 
-    val updateMode = viewModel.updateMode.observeAsState(false)
-    if (!updateMode.value) {
-        val selectedGraphType by viewModel.graphStatType.observeAsState(GraphStatType.LINE_GRAPH)
-        GraphStatTypeSelector(
-            selectedItem = selectedGraphType,
-            setGraphType = { viewModel.setGraphType(it) }
+            val selectedGraphType by viewModel.graphStatType.observeAsState(GraphStatType.LINE_GRAPH)
+            GraphStatTypeSelector(
+                selectedItem = selectedGraphType,
+                setGraphType = { viewModel.setGraphType(it) }
+            )
+        }
+
+        FormFieldSeparator()
+
+        ConfigInputView(
+            viewModelStoreOwner = viewModelStoreOwner,
+            viewModel = viewModel,
+            graphStatId = graphStatId,
+            scrollState = scrollState
+        )
+
+        FormFieldSeparator()
+
+        FormSaveButton(
+            isInErrorState = isInErrorState,
+            isInUpdateMode = isInUpdateMode,
+            onCreateUpdateClicked = viewModel::createGraphOrStat
         )
     }
-
-    SpacingSmall()
-    Divider()
-    SpacingSmall()
-
-    ConfigInputView(
-        viewModelStoreOwner = viewModelStoreOwner,
-        viewModel = viewModel,
-        graphStatId = graphStatId,
-        scrollState = scrollState
-    )
 }
 
 @Composable
@@ -224,28 +226,20 @@ fun GraphStatTypeSelector(
     selectedItem: GraphStatType,
     setGraphType: (GraphStatType) -> Unit
 ) {
-    LabeledRow(
-        label = stringResource(R.string.graph_type_label),
-        paddingValues = PaddingValues(
-            start = dimensionResource(id = R.dimen.card_padding)
-        )
-    ) {
+    val spinnerItems = mapOf(
+        GraphStatType.LINE_GRAPH to stringResource(id = R.string.graph_type_line_graph),
+        GraphStatType.BAR_CHART to stringResource(id = R.string.graph_type_bar_chart),
+        GraphStatType.PIE_CHART to stringResource(id = R.string.graph_type_pie_chart),
+        GraphStatType.AVERAGE_TIME_BETWEEN to stringResource(id = R.string.graph_type_average_time_between),
+        GraphStatType.TIME_HISTOGRAM to stringResource(id = R.string.graph_type_time_histogram),
+        GraphStatType.LAST_VALUE to stringResource(id = R.string.graph_type_last_value),
+    )
 
-        val spinnerItems = mapOf(
-            GraphStatType.LINE_GRAPH to stringResource(id = R.string.graph_type_line_graph),
-            GraphStatType.BAR_CHART to stringResource(id = R.string.graph_type_bar_chart),
-            GraphStatType.PIE_CHART to stringResource(id = R.string.graph_type_pie_chart),
-            GraphStatType.AVERAGE_TIME_BETWEEN to stringResource(id = R.string.graph_type_average_time_between),
-            GraphStatType.TIME_HISTOGRAM to stringResource(id = R.string.graph_type_time_histogram),
-            GraphStatType.LAST_VALUE to stringResource(id = R.string.graph_type_last_value),
-        )
-
-        TextMapSpinner(
-            strings = spinnerItems,
-            selectedItem = selectedItem,
-            onItemSelected = { setGraphType(it) },
-        )
-    }
+    FormSpinner(
+        strings = spinnerItems,
+        selectedItem = selectedItem,
+        onItemSelected = { setGraphType(it) },
+    )
 }
 
 @Composable
@@ -299,6 +293,5 @@ fun ConfigInputView(
             graphStatId = graphStatId,
             onConfigEvent = { viewModel.onConfigEvent(it) },
         )
-
     }
 }

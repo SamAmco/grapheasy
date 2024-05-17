@@ -16,38 +16,32 @@
  */
 package com.samco.trackandgraph.graphstatinput.customviews
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.base.database.dto.YRangeType
-import com.samco.trackandgraph.ui.compose.ui.LabeledRow
-import com.samco.trackandgraph.ui.compose.ui.TextMapSpinner
+import com.samco.trackandgraph.ui.compose.ui.FormLabel
+import com.samco.trackandgraph.ui.compose.ui.FormSpinner
 
 @Composable
 fun GraphStatYRangeTypeSpinner(
     yRangeType: YRangeType,
     onYRangeTypeSelected: (YRangeType) -> Unit
 ) {
-    LabeledRow(
-        label = stringResource(id = R.string.range_style),
-        paddingValues = PaddingValues(
-            start = dimensionResource(id = R.dimen.card_padding)
-        )
-    ) {
-        val strings = stringArrayResource(id = R.array.y_range_styles)
+    FormLabel(text = stringResource(id = R.string.range_style))
 
-        val spinnerItems = mapOf(
-            YRangeType.DYNAMIC to strings[0],
-            YRangeType.FIXED to strings[1]
-        )
+    val strings = stringArrayResource(id = R.array.y_range_styles)
 
-        TextMapSpinner(
-            strings = spinnerItems,
-            selectedItem = yRangeType,
-            onItemSelected = onYRangeTypeSelected
-        )
-    }
+    val spinnerItems = remember { mapOf(
+        YRangeType.DYNAMIC to strings[0],
+        YRangeType.FIXED to strings[1]
+    )}
+
+    FormSpinner(
+        strings = spinnerItems,
+        selectedItem = yRangeType,
+        onItemSelected = onYRangeTypeSelected
+    )
 }

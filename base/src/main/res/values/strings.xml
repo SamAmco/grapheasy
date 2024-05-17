@@ -113,14 +113,16 @@
         <item>Plot Monthly Totals</item>
         <item>Plot Yearly Totals</item>
     </string-array>
-    <string name="graph_time_durations_all_data">All Data</string>
-    <string name="graph_time_durations_a_day">A Day</string>
-    <string name="graph_time_durations_a_week">A Week</string>
-    <string name="graph_time_durations_a_month">A Month</string>
-    <string name="graph_time_durations_three_months">Three Months</string>
-    <string name="graph_time_durations_six_months">Six Months</string>
-    <string name="graph_time_durations_a_year">A Year</string>
-    <string name="custom">Custom</string>
+    <string-array name="graph_time_durations">
+        <item>All Data</item>
+        <item>A Day</item>
+        <item>A Week</item>
+        <item>A Month</item>
+        <item>Three Months</item>
+        <item>Six Months</item>
+        <item>A Year</item>
+        <item>Custom</item>
+    </string-array>
     <string-array name="y_range_styles">
         <item>Dynamic</item>
         <item>Fixed</item>
@@ -201,6 +203,7 @@
     <string name="backup_error_failed_to_copy_database">Something went wrong while copying the database file.</string>
     <string name="restore_failed">Restore failed. %1$s</string>
     <string name="add_a_longer_description_optional">Add a longer description (optional)</string>
+    <string name="optional_parenthesis">(optional)</string>
     <string name="no_data_points_history_fragment_hint">Your tracking history will show up here when you have input some data.</string>
     <string name="info">Info</string>
     <string name="no_description">No description</string>
@@ -269,8 +272,8 @@
     <string name="faq_page_link" translatable="false">https://github.com/SamAmco/track-and-graph/blob/release/v3.8.2/docs/faq/index.md#faq</string>
     <string name="faq_page_link_1" translatable="false">https://github.com/SamAmco/track-and-graph/blob/release/v3.8.2/docs/faq/faq_1.md#how-do-i-start-tracking-something</string>
     <string name="advanced_options">Advanced options</string>
-    <string name="type_colon">"Type: "</string>
-    <string name="order_colon">"Order: "</string>
+    <string name="suggestions_type">Type</string>
+    <string name="suggestions_order">Order</string>
     <string name="value_and_label">Value and label</string>
     <string name="value_only">Value only</string>
     <string name="label_only">Label only</string>

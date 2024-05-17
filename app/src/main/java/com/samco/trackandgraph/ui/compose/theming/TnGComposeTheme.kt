@@ -27,13 +27,35 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import com.google.android.material.composethemeadapter.createMdcTheme
 
+private val perfectWhite = Color(0xffffffff)
 private val lightGray = Color(0xFFE0E0E0)
 private val darkGray = Color(0xFF4C4C4C)
-private val midCharcoal = Color(0xFF222222)
+private val perfectBlack = Color(0xff000000)
+
+private val warmWhite = Color(0xfffffbfa)
+private val pippin = Color(0xffffe8e1)
+
+private val darkCharcoal = Color(0xff121212)
+private val midCharcoal = Color(0xff222222)
+private val lightCharcoal = Color(0xff373737)
+
+private val lightFormInputBorder = Color(0xffe8d7d0)
+private val lightFormInputText = Color(0xff6e6e6e)
+private val lightFormDisabledBackground = Color(0xffded1cb)
+private val lightFormDisabledBorder = Color(0xffd8d8d8)
+
+private val darkFormInputText = Color(0xff858585)
+private val darkFormDisabledBackground = Color(0xff2d2e3e)
+private val darkFormDisabledBorder = Color(0xff737373)
 
 data class TngColors(
     val material: Colors,
-    val selectorButtonColor: Color
+    val selectorButtonColor: Color,
+    val inputBackgroundColor: Color,
+    val inputBorderColor: Color,
+    val inputTextColor: Color,
+    val disabledBackgroundColor: Color,
+    val disabledBorderColor: Color
 ) {
     val primary get() = material.primary
     val primaryVariant get() = material.primaryVariant
@@ -48,17 +70,27 @@ data class TngColors(
     val onSurface get() = material.onSurface
     val onError get() = material.onError
     val isLight get() = material.isLight
+    val textNoteColor get() = material.onSurface.copy(alpha = 0.5f)
 }
-
 
 private val LightColorPalette = TngColors(
     material = lightColors(),
-    selectorButtonColor = lightGray
+    selectorButtonColor = lightGray,
+    inputBackgroundColor = perfectWhite,
+    inputBorderColor = lightFormInputBorder,
+    inputTextColor = lightFormInputText,
+    disabledBackgroundColor = lightFormDisabledBackground,
+    disabledBorderColor = lightFormDisabledBorder
 )
 
 private val DarkColorPalette = TngColors(
     material = darkColors(),
-    selectorButtonColor = darkGray
+    selectorButtonColor = darkGray,
+    inputBackgroundColor = perfectBlack,
+    inputBorderColor = lightCharcoal,
+    inputTextColor = darkFormInputText,
+    disabledBackgroundColor = darkFormDisabledBackground,
+    disabledBorderColor = darkFormDisabledBorder
 )
 
 val TngColors.disabledAlpha get() = 0.4f
@@ -109,6 +141,29 @@ fun DialogTheme(
         } else it
     }
 
+
+    CompositionLocalProvider(LocalColors provides colors) {
+        MaterialTheme(
+            colors = colors.material,
+            typography = MaterialTheme.typography,
+            shapes = MaterialTheme.shapes,
+            content = block
+        )
+    }
+}
+
+@Composable
+fun FormTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    block: @Composable () -> Unit
+) = TnGComposeTheme(darkTheme) {
+    val colors = MaterialTheme.tngColors.copy(
+        material = MaterialTheme.tngColors.material.copy(
+            background = if (darkTheme) darkCharcoal else warmWhite,
+            surface = if (darkTheme) midCharcoal else pippin,
+            onPrimary = warmWhite
+        )
+    )
 
     CompositionLocalProvider(LocalColors provides colors) {
         MaterialTheme(

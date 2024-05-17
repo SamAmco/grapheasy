@@ -33,7 +33,7 @@ import com.samco.trackandgraph.NavButtonStyle
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.settings.TngSettings
 import com.samco.trackandgraph.ui.compose.compositionlocals.LocalSettings
-import com.samco.trackandgraph.ui.compose.theming.TnGComposeTheme
+import com.samco.trackandgraph.ui.compose.theming.FormTheme
 import com.samco.trackandgraph.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -68,7 +68,7 @@ class GraphStatInputFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CompositionLocalProvider(LocalSettings provides tngSettings) {
-                    TnGComposeTheme {
+                    FormTheme {
                         GraphStatInputView(
                             viewModelStoreOwner = this@GraphStatInputFragment,
                             viewModel = viewModel,

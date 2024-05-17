@@ -29,7 +29,7 @@ import androidx.navigation.fragment.navArgs
 import com.samco.trackandgraph.MainActivity
 import com.samco.trackandgraph.NavButtonStyle
 import com.samco.trackandgraph.R
-import com.samco.trackandgraph.ui.compose.theming.TnGComposeTheme
+import com.samco.trackandgraph.ui.compose.theming.FormTheme
 import com.samco.trackandgraph.util.*
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,7 +52,7 @@ class AddTrackerFragment : Fragment() {
         navController = container?.findNavController()
         return ComposeView(requireContext()).apply {
             setContent {
-                TnGComposeTheme {
+                FormTheme {
                     AddTrackerView(viewModel)
                 }
             }

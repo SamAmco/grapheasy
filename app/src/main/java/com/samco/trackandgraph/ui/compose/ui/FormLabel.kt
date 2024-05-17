@@ -16,34 +16,44 @@
  */
 package com.samco.trackandgraph.ui.compose.ui
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import com.samco.trackandgraph.R
 import androidx.compose.ui.unit.dp
+import com.samco.trackandgraph.ui.compose.theming.tngColors
 
 @Composable
-fun AddCreateBar(
-    errorText: Int?
-) = Surface(
-    modifier = Modifier.fillMaxWidth()
+fun FormLabel(
+    text: String,
+    isOptional: Boolean = false
+) = Row(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(
+            0.dp,
+            dimensionResource(id = R.dimen.form_label_padding_top),
+            0.dp,
+            dimensionResource(id = R.dimen.form_label_padding_bottom)
+        )
 ) {
-    if (errorText != null)
-    {
+    Text(
+        text = text,
+        modifier = Modifier.weight(1f)
+    )
+
+    if (isOptional) {
         Text(
-            text = errorText?.let { stringResource(id = it) } ?: "",
-            color = MaterialTheme.colors.error,
+            text = stringResource(id = R.string.optional_parenthesis),
             fontSize = MaterialTheme.typography.body2.fontSize,
             fontWeight = MaterialTheme.typography.body2.fontWeight,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
+            color = MaterialTheme.tngColors.textNoteColor
         )
     }
 }

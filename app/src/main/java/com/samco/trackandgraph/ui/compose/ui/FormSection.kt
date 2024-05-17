@@ -16,35 +16,30 @@
  */
 package com.samco.trackandgraph.ui.compose.ui
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import com.samco.trackandgraph.R
+import com.samco.trackandgraph.ui.compose.theming.tngColors
 
 @Composable
-fun AddCreateBar(
-    errorText: Int?
-) = Surface(
-    modifier = Modifier.fillMaxWidth()
+fun FormSection(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
 ) {
-    if (errorText != null)
-    {
-        Text(
-            text = errorText?.let { stringResource(id = it) } ?: "",
-            color = MaterialTheme.colors.error,
-            fontSize = MaterialTheme.typography.body2.fontSize,
-            fontWeight = MaterialTheme.typography.body2.fontWeight,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        )
+    Box(
+        modifier = modifier
+            .background(
+                MaterialTheme.tngColors.surface,
+                shape = RoundedCornerShape(dimensionResource(id = R.dimen.form_section_corner))
+            )
+            .padding(dimensionResource(id = R.dimen.form_section_padding))
+    ) {
+        content()
     }
 }
-

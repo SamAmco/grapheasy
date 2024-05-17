@@ -45,12 +45,13 @@ fun LabelInputTextField(
     onValueChange: (TextFieldValue) -> Unit,
     focusManager: FocusManager? = null,
     focusRequester: FocusRequester? = null,
-    onNextOverride: (() -> Unit)? = null
+    onNextOverride: (() -> Unit)? = null,
+    showLabel: Boolean = true
 ) {
     SlimOutlinedTextField(
         value = textFieldValue,
         onValueChange = { onValueChange(it) },
-        label = { Text(stringResource(id = R.string.label)) },
+        label = { if (showLabel) { Text(stringResource(id = R.string.label)) }},
         keyboardActions = KeyboardActions(
             onNext = {
                 if (onNextOverride != null) onNextOverride()
@@ -76,14 +77,15 @@ fun ValueInputTextField(
     onValueChange: (TextFieldValue) -> Unit,
     focusManager: FocusManager? = null,
     focusRequester: FocusRequester? = null,
-    onNextOverride: (() -> Unit)? = null
+    onNextOverride: (() -> Unit)? = null,
+    showLabel: Boolean = true
 ) {
     val focusUpdateScope = rememberCoroutineScope()
 
     SlimOutlinedTextField(
         value = textFieldValue,
         onValueChange = { onValueChange(it) },
-        label = { Text(stringResource(id = R.string.value)) },
+        label = { if (showLabel) { Text(stringResource(id = R.string.value)) } },
         keyboardActions = KeyboardActions(
             onNext = {
                 if (onNextOverride != null) onNextOverride()

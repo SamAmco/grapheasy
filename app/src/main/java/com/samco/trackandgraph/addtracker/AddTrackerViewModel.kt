@@ -34,8 +34,7 @@ interface AddTrackerViewModel : DurationInputViewModel {
     val hasDefaultValue: LiveData<Boolean>
     val defaultValue: TextFieldValue
     val defaultLabel: TextFieldValue
-    val createButtonEnabled: LiveData<Boolean>
-    val errorText: LiveData<Int?>
+    val errors: LiveData<List<AddTrackerError>>
     val durationNumericConversionMode: LiveData<TrackerHelper.DurationNumericConversionMode>
     val shouldShowDurationConversionModeSpinner: LiveData<Boolean>
     val isUpdateMode: LiveData<Boolean>
@@ -56,6 +55,11 @@ interface AddTrackerViewModel : DurationInputViewModel {
     fun onCreateUpdateClicked()
     fun onSuggestionTypeChanged(suggestionType: TrackerSuggestionType)
     fun onSuggestionOrderChanged(suggestionOrder: TrackerSuggestionOrder)
+
+    sealed interface AddTrackerError {
+        object NoName : AddTrackerError
+        object NameAlreadyExists : AddTrackerError
+    }
 }
 
 //TODO so much mutable state :/ ugly
@@ -67,11 +71,6 @@ class AddTrackerViewModelImpl @Inject constructor(
 ) : ViewModel(), AddTrackerViewModel, DurationInputViewModel by DurationInputViewModelImpl() {
 
     private var disallowedNames: List<String>? = null
-
-    private sealed interface ValidationError {
-        object NoName : ValidationError
-        object NameAlreadyExists : ValidationError
-    }
 
     private val isUpdateModeFlow = MutableStateFlow(false)
     private val isDurationModeFlow = MutableStateFlow(false)
@@ -99,27 +98,17 @@ class AddTrackerViewModelImpl @Inject constructor(
         trackerDescription = description
     }
 
-    private val validationErrorFlow = snapshotFlow { trackerName }
+    private val trackerNameErrors = snapshotFlow { trackerName }
         .map {
             when {
-                it.text.isBlank() -> ValidationError.NoName
-                disallowedNames?.contains(it.text) == true -> ValidationError.NameAlreadyExists
-                else -> null
+                it.text.isBlank() -> listOf(AddTrackerViewModel.AddTrackerError.NoName)
+                disallowedNames?.contains(it.text) == true -> listOf(AddTrackerViewModel.AddTrackerError.NameAlreadyExists)
+                else -> listOf()
             }
         }
 
-    override val createButtonEnabled = validationErrorFlow
-        .map { it == null }
-        .asLiveData(viewModelScope.coroutineContext)
-    override val errorText = validationErrorFlow
-        .map {
-            when (it) {
-                ValidationError.NoName -> R.string.tracker_name_cannot_be_null
-                ValidationError.NameAlreadyExists -> R.string.tracker_with_that_name_exists
-                else -> null
-            }
-        }
-        .asLiveData(viewModelScope.coroutineContext)
+    override val errors = trackerNameErrors.asLiveData(viewModelScope.coroutineContext)
+
     override val durationNumericConversionMode =
         MutableLiveData(TrackerHelper.DurationNumericConversionMode.HOURS)
     override val shouldShowDurationConversionModeSpinner: LiveData<Boolean> =

@@ -98,13 +98,16 @@
         <item>Generar los totales anuales</item>
     </string-array>
     <string name="graph_type_last_value">Último seguimiento/Tiempo desde</string>
-    <string name="graph_time_durations_all_data">Todos los datos</string>
-    <string name="graph_time_durations_a_day">Un día</string>
-    <string name="graph_time_durations_a_week">Una semana</string>
-    <string name="graph_time_durations_a_month">Un mes</string>
-    <string name="graph_time_durations_three_months">Tres meses</string>
-    <string name="graph_time_durations_six_months">Seis meses</string>
-    <string name="graph_time_durations_a_year">Un año</string>
+    <string-array name="graph_time_durations">
+        <item>Todos los datos</item>
+        <item>Un día</item>
+        <item>Una semana</item>
+        <item>Un mes</item>
+        <item>Tres meses</item>
+        <item>Seis meses</item>
+        <item>Un año</item>
+        <item>Costumbre</item>
+    </string-array>
     <string-array name="y_range_styles">
         <item>Dinámico</item>
         <item>Fijo</item>
@@ -113,9 +116,6 @@
         <item>Reciente</item>
         <item>Fecha personalizada…</item>
     </string-array>
-
-
-    <string name="custom">Costumbre</string>
     <string name="import_exception_unknown">Error de importación: Se ha producido un error desconocido</string>
     <string name="import_exception_bad_headers">Error de importación: Las cabeceras no coinciden con las esperadas: %1$s</string>
     <string name="import_exception_inconsistent_record">Error de importación: Lq traza de la línea %1$s no es consistente con las cabeceras requeridas</string>
@@ -181,6 +181,7 @@
     <string name="backup_error_failed_to_copy_database">Algo salió mal mientras se copiaba el archivo de la base de datos.</string>
     <string name="restore_failed">Fallo en la restauración. %1$s</string>
     <string name="add_a_longer_description_optional">Añadir una descripción más larga (opcional)</string>
+    <string name="optional_parenthesis">(opcional)</string>
     <string name="no_data_points_history_fragment_hint">Su historial de traza se mostrará aquí cuando haya introducido algunos datos.</string>
     <string name="info">Info</string>
     <string name="no_description">Sin descripción</string>
@@ -254,8 +255,8 @@
     <string name="help">Ayudar</string>
 
     <string name="advanced_options">Opciones avanzadas</string>
-    <string name="type_colon">\"Escribe: \"</string>
-    <string name="order_colon">\"Ordenar: \"</string>
+    <string name="suggestions_type">Escribe</string>
+    <string name="suggestions_order">Ordenar</string>
     <string name="value_and_label">Valor y etiqueta</string>
     <string name="value_only">Solo valor</string>
     <string name="label_only">Solo etiqueta</string>

@@ -21,8 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -39,7 +38,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -53,21 +51,18 @@ import com.samco.trackandgraph.ui.compose.ui.*
 fun AddTrackerView(viewModel: AddTrackerViewModel) {
     val focusRequester = FocusRequester()
     val isUpdateMode by viewModel.isUpdateMode.observeAsState(false)
-    val errorText by viewModel.errorText.observeAsState()
+    val errors by viewModel.errors.observeAsState(listOf())
     val openDialog by viewModel.showUpdateWarningAlertDialog.observeAsState(false)
 
     Surface(color = MaterialTheme.colors.background) {
         Column(Modifier.fillMaxSize()) {
+
             AddTrackerInputForm(
                 modifier = Modifier.weight(1f),
                 viewModel = viewModel,
-                focusRequester = focusRequester
-            )
-
-            AddCreateBar(
-                errorText = errorText,
-                onCreateUpdateClicked = viewModel::onCreateUpdateClicked,
-                isUpdateMode = isUpdateMode
+                focusRequester = focusRequester,
+                isInUpdateMode = isUpdateMode,
+                errors = errors
             )
 
             if (openDialog) UpdateWarningDialog(
@@ -95,51 +90,69 @@ private fun UpdateWarningDialog(
 private fun AddTrackerInputForm(
     modifier: Modifier,
     viewModel: AddTrackerViewModel,
-    focusRequester: FocusRequester
-) = Column(
-    modifier = modifier
-        .padding(dimensionResource(id = R.dimen.card_padding))
-        .fillMaxWidth()
-        .verticalScroll(state = rememberScrollState())
-) {
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
+    focusRequester: FocusRequester,
+    errors: List<AddTrackerViewModel.AddTrackerError>,
+    isInUpdateMode: Boolean
+) = FormSurface {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        val focusManager = LocalFocusManager.current
+        val keyboardController = LocalSoftwareKeyboardController.current
 
-    val isDuration = viewModel.isDuration.observeAsState(false)
+        val isDuration = viewModel.isDuration.observeAsState(false)
 
-    SpacingSmall()
+        FormLabel(text = stringResource(id = R.string.tracker_name))
+        NameInput(
+            viewModel,
+            focusManager,
+            focusRequester,
+            keyboardController
+        )
+        FormError(stringResource(id = R.string.tracker_name_cannot_be_null), errors.contains(AddTrackerViewModel.AddTrackerError.NoName))
+        FormError(stringResource(id = R.string.tracker_with_that_name_exists), errors.contains(AddTrackerViewModel.AddTrackerError.NameAlreadyExists))
 
-    NameInput(
-        viewModel,
-        focusManager,
-        focusRequester,
-        keyboardController
-    )
+        FormFieldSeparator()
 
-    SpacingLarge()
+        FormLabel(
+            text = stringResource(id = R.string.description),
+            isOptional = true
+        )
+        DescriptionInput(viewModel)
 
-    DescriptionInput(viewModel)
+        FormFieldSeparator()
 
-    SpacingLarge()
+        DurationCheckbox(isDuration.value, viewModel)
 
-    DurationCheckbox(isDuration.value, viewModel)
+        val shouldShowConversionSpinner =
+            viewModel.shouldShowDurationConversionModeSpinner.observeAsState(false)
+        val durationConversionMode = viewModel.durationNumericConversionMode.observeAsState()
 
-    val shouldShowConversionSpinner =
-        viewModel.shouldShowDurationConversionModeSpinner.observeAsState(false)
-    val durationConversionMode = viewModel.durationNumericConversionMode.observeAsState()
+        if (shouldShowConversionSpinner.value) {
+            FormFieldSeparator()
 
-    if (shouldShowConversionSpinner.value) {
-        SpacingLarge()
-        DurationConversionModeInput(
-            isDuration.value,
-            durationConversionMode.value,
-            viewModel
+            DurationConversionModeInput(
+                isDuration.value,
+                durationConversionMode.value,
+                viewModel
+            )
+        }
+
+        FormFieldSeparator()
+
+        AdvancedOptions(viewModel)
+
+        val isInErrorState = remember(errors) { errors.isNotEmpty() }
+
+        FormFieldSeparator()
+
+        FormSaveButton(
+            isInErrorState = isInErrorState,
+            isInUpdateMode = isInUpdateMode,
+            onCreateUpdateClicked = viewModel::onCreateUpdateClicked,
         )
     }
-
-    SpacingLarge()
-
-    AdvancedOptions(viewModel)
 }
 
 @Composable
@@ -153,20 +166,30 @@ private fun AdvancedOptions(viewModel: AddTrackerViewModel) = Column {
 
     AnimatedVisibility(visible = advancedOptionsExpanded) {
         Column {
-            SpacingSmall()
+            FormFieldSeparator()
 
             DefaultValueOptions(viewModel)
 
-            SpacingLarge()
+            FormFieldSeparator()
 
-            Text(
-                text = stringResource(id = R.string.suggestions),
-                style = MaterialTheme.typography.subtitle2
-            )
+            FormSection {
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.suggestions),
+                        style = MaterialTheme.typography.subtitle2
+                    )
 
-            SuggestionType(viewModel)
+                    FormFieldSeparator()
 
-            SuggestionOrder(viewModel)
+                    FormLabel(text = stringResource(id = R.string.suggestions_type))
+                    SuggestionType(viewModel)
+
+                    FormFieldSeparator()
+
+                    FormLabel(text = stringResource(id = R.string.suggestions_order))
+                    SuggestionOrder(viewModel)
+                }
+            }
         }
     }
 }
@@ -184,13 +207,11 @@ fun SuggestionType(viewModel: AddTrackerViewModel) {
         TrackerSuggestionType.NONE to stringResource(R.string.none)
     )
 
-    LabeledRow(label = stringResource(id = R.string.type_colon)) {
-        TextMapSpinner(
-            strings = suggestionTypeMap,
-            selectedItem = selectedSuggestionType,
-            onItemSelected = { viewModel.onSuggestionTypeChanged(it) }
-        )
-    }
+    FormSpinner(
+        strings = suggestionTypeMap,
+        selectedItem = selectedSuggestionType,
+        onItemSelected = { viewModel.onSuggestionTypeChanged(it) }
+    )
 }
 
 @Composable
@@ -213,13 +234,11 @@ fun SuggestionOrder(viewModel: AddTrackerViewModel) {
             TrackerSuggestionOrder.OLDEST to stringResource(R.string.oldest)
         )
 
-        LabeledRow(label = stringResource(id = R.string.order_colon)) {
-            TextMapSpinner(
-                strings = suggestionOrderMap,
-                selectedItem = selectedSuggestionOrder,
-                onItemSelected = { viewModel.onSuggestionOrderChanged(it) }
-            )
-        }
+        FormSpinner(
+            strings = suggestionOrderMap,
+            selectedItem = selectedSuggestionOrder,
+            onItemSelected = { viewModel.onSuggestionOrderChanged(it) }
+        )
     }
 }
 
@@ -260,25 +279,50 @@ private fun RowScope.Divider() {
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun DefaultValueOptions(viewModel: AddTrackerViewModel) {
     val hasDefaultValue = viewModel.hasDefaultValue.observeAsState(false)
     val isDuration = viewModel.isDuration.observeAsState(false)
-
     val focusManager = LocalFocusManager.current
-    DefaultValueCheckbox(hasDefaultValue.value, viewModel)
 
-    if (hasDefaultValue.value) {
+    FormSection {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxWidth()
         ) {
-            if (isDuration.value) DurationInputRow(viewModel)
-            else ValueInputRow(viewModel, focusManager)
+            DefaultValueCheckbox(hasDefaultValue.value, viewModel)
 
-            SpacingSmall()
+            if (hasDefaultValue.value) {
+                Divider()
 
-            LabelInputRow(viewModel)
+                FormLabel(text = stringResource(id = R.string.value))
+
+                if (isDuration.value) {
+                    FormDurationInput(
+                        hoursFieldValue = viewModel.hours,
+                        minutesFieldValue = viewModel.minutes,
+                        secondsFieldValue = viewModel.seconds,
+                        onHoursValueChange = viewModel::setHoursText,
+                        onMinutesValueChange = viewModel::setMinutesText,
+                        onSecondsValueChange = viewModel::setSecondsText
+                    )
+                }
+                else {
+                    FormTextInput(
+                        textFieldValue = viewModel.defaultValue,
+                        onValueChange = viewModel::onDefaultValueChanged,
+                        focusManager = focusManager,
+                        isNumeric = true)
+                }
+
+                FormFieldSeparator()
+
+                FormLabel(text = stringResource(id = R.string.label))
+                FormTextInput(
+                    textFieldValue = viewModel.defaultLabel,
+                    onValueChange = viewModel::onDefaultLabelChanged
+                )
+            }
         }
     }
 }
@@ -299,13 +343,9 @@ private fun DurationConversionModeInput(
         val name =
             if (isDuration) stringResource(id = R.string.numeric_to_duration_mode_header)
             else stringResource(id = R.string.duration_to_numeric_mode_header)
-        Text(
-            text = name,
-            modifier = Modifier
-                .padding(horizontal = dimensionResource(id = R.dimen.card_padding)),
-            style = MaterialTheme.typography.subtitle2
-        )
-        TextMapSpinner(
+
+        FormLabel(text = name)
+        FormSpinner(
             strings = strings,
             selectedItem = durationConversionMode
                 ?: TrackerHelper.DurationNumericConversionMode.HOURS,
@@ -315,36 +355,11 @@ private fun DurationConversionModeInput(
 }
 
 @Composable
-private fun LabelInputRow(viewModel: AddTrackerViewModel) {
-    LabelInputTextField(
-        textFieldValue = viewModel.defaultLabel,
-        onValueChange = viewModel::onDefaultLabelChanged
-    )
-}
-
-@Composable
-private fun ValueInputRow(
-    viewModel: AddTrackerViewModel,
-    focusManager: FocusManager
-) {
-    ValueInputTextField(
-        textFieldValue = viewModel.defaultValue,
-        onValueChange = viewModel::onDefaultValueChanged,
-        focusManager = focusManager
-    )
-}
-
-@Composable
-private fun DurationInputRow(viewModel: AddTrackerViewModel) {
-    DurationInput(viewModel = viewModel)
-}
-
-@Composable
 private fun DefaultValueCheckbox(
     hasDefaultValue: Boolean,
     viewModel: AddTrackerViewModel
 ) {
-    RowCheckbox(
+    FormSwitchInput(
         checked = hasDefaultValue,
         onCheckedChange = { viewModel.onHasDefaultValueChanged(it) },
         text = stringResource(id = R.string.use_default_value)
@@ -356,7 +371,7 @@ private fun DurationCheckbox(
     isDuration: Boolean,
     viewModel: AddTrackerViewModel
 ) {
-    RowCheckbox(
+    FormSwitchInput(
         checked = isDuration,
         onCheckedChange = { viewModel.onIsDurationCheckChanged(it) },
         text = stringResource(id = R.string.tracker_type)
@@ -367,10 +382,9 @@ private fun DurationCheckbox(
 @Composable
 private fun DescriptionInput(
     viewModel: AddTrackerViewModel
-) = FullWidthTextField(
+) = FormTextInput(
     textFieldValue = viewModel.trackerDescription,
     onValueChange = viewModel::onTrackerDescriptionChanged,
-    label = stringResource(id = R.string.add_a_longer_description_optional),
     singleLine = false
 )
 
@@ -381,10 +395,9 @@ private fun NameInput(
     focusManager: FocusManager,
     focusRequester: FocusRequester,
     keyboardController: SoftwareKeyboardController?
-) = FullWidthTextField(
+) = FormTextInput(
     textFieldValue = viewModel.trackerName,
     onValueChange = viewModel::onTrackerNameChanged,
-    label = stringResource(id = R.string.tracker_name),
     focusManager = focusManager,
     focusRequester = focusRequester,
     keyboardController = keyboardController

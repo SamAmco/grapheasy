@@ -17,19 +17,14 @@
 package com.samco.trackandgraph.graphstatinput.configviews.ui
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.samco.trackandgraph.R
@@ -41,12 +36,14 @@ import com.samco.trackandgraph.graphstatinput.customviews.GraphStatDurationSpinn
 import com.samco.trackandgraph.graphstatinput.customviews.GraphStatEndingAtSpinner
 import com.samco.trackandgraph.graphstatinput.customviews.GraphStatYRangeTypeSpinner
 import com.samco.trackandgraph.graphstatinput.customviews.YRangeFromToInputs
-import com.samco.trackandgraph.ui.compose.ui.LabeledRow
-import com.samco.trackandgraph.ui.compose.ui.MiniNumericTextField
-import com.samco.trackandgraph.ui.compose.ui.RowCheckbox
-import com.samco.trackandgraph.ui.compose.ui.SpacingSmall
-import com.samco.trackandgraph.ui.compose.ui.TextMapSpinner
+import com.samco.trackandgraph.ui.compose.ui.FormFieldSeparator
+import com.samco.trackandgraph.ui.compose.ui.FormLabel
+import com.samco.trackandgraph.ui.compose.ui.FormSection
+import com.samco.trackandgraph.ui.compose.ui.FormSpinner
+import com.samco.trackandgraph.ui.compose.ui.FormSwitchInput
+import com.samco.trackandgraph.ui.compose.ui.FormTextInput
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun BarChartConfigView(
     scrollState: ScrollState,
@@ -62,48 +59,52 @@ fun BarChartConfigView(
         viewModel.getConfigFlow().collect { onConfigEvent(it) }
     }
 
-    GraphStatDurationSpinner(
-        modifier = Modifier,
-        selectedDuration = viewModel.selectedDuration,
-        onDurationSelected = { viewModel.updateDuration(it) }
-    )
+    FormSection {
+        Column {
+            GraphStatDurationSpinner(
+                modifier = Modifier,
+                selectedDuration = viewModel.selectedDuration,
+                onDurationSelected = { viewModel.updateDuration(it) }
+            )
 
-    GraphStatEndingAtSpinner(
-        modifier = Modifier,
-        sampleEndingAt = viewModel.sampleEndingAt
-    ) { viewModel.updateSampleEndingAt(it) }
+            FormFieldSeparator()
 
-    GraphStatYRangeTypeSpinner(
-        yRangeType = viewModel.yRangeType,
-        onYRangeTypeSelected = { viewModel.updateYRangeType(it) }
-    )
+            GraphStatEndingAtSpinner(
+                modifier = Modifier,
+                sampleEndingAt = viewModel.sampleEndingAt
+            ) { viewModel.updateSampleEndingAt(it) }
 
-    if (viewModel.yRangeType == YRangeType.FIXED) {
-        YRangeFromToInputs(viewModel = viewModel, fromEnabled = false)
+            FormFieldSeparator()
+
+            GraphStatYRangeTypeSpinner(
+                yRangeType = viewModel.yRangeType,
+                onYRangeTypeSelected = { viewModel.updateYRangeType(it) }
+            )
+
+            if (viewModel.yRangeType == YRangeType.FIXED) {
+                FormFieldSeparator()
+
+                YRangeFromToInputs(viewModel = viewModel, fromEnabled = false)
+            }
+        }
     }
 
-    SpacingSmall()
+    FormFieldSeparator()
 
-    Divider()
-
-    SpacingSmall()
-
-    Text(
-        modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.card_padding)),
-        text = stringResource(id = R.string.select_a_feature),
-        style = MaterialTheme.typography.subtitle2
-    )
+    FormLabel(text = stringResource(id = R.string.select_a_feature))
 
     val featureId = viewModel.featureId
     val featureMap = viewModel.featureMap
 
     if (featureId != null && featureMap != null) {
-        TextMapSpinner(
+        FormSpinner(
             strings = featureMap,
             selectedItem = featureId,
             onItemSelected = { viewModel.updateFeatureId(it) }
         )
     }
+
+    FormFieldSeparator()
 
     val strings = stringArrayResource(id = R.array.time_histogram_windows)
     val barIntervalNames = remember {
@@ -118,40 +119,27 @@ fun BarChartConfigView(
         )
     }
 
-    LabeledRow(
-        label = stringResource(id = R.string.bar_interval),
-        paddingValues = PaddingValues(start = dimensionResource(id = R.dimen.card_padding))
-    ) {
-        TextMapSpinner(
-            strings = barIntervalNames,
-            selectedItem = viewModel.selectedBarPeriod,
-            onItemSelected = viewModel::updateBarPeriod
-        )
-    }
+    FormLabel(text = stringResource(id = R.string.bar_interval))
+    FormSpinner(
+        strings = barIntervalNames,
+        selectedItem = viewModel.selectedBarPeriod,
+        onItemSelected = viewModel::updateBarPeriod
+    )
 
-    SpacingSmall()
+    FormFieldSeparator()
 
-    RowCheckbox(
+    FormSwitchInput(
         checked = viewModel.sumByCount,
         onCheckedChange = { viewModel.updateSumByCount(it) },
         text = stringResource(id = R.string.sum_by_count_checkbox_label)
     )
 
-    SpacingSmall()
+    FormFieldSeparator()
 
-    LabeledRow(
-        label = stringResource(id = R.string.scale),
-        paddingValues = PaddingValues(start = dimensionResource(id = R.dimen.card_padding))
-    ) {
-        MiniNumericTextField(
-            modifier = Modifier
-                .weight(1f)
-                .alignByBaseline(),
-            textAlign = TextAlign.Center,
-            textFieldValue = viewModel.scale,
-            onValueChange = { viewModel.updateScale(it) }
-        )
-    }
-
-    SpacingSmall()
+    FormLabel(text = stringResource(id = R.string.scale))
+    FormTextInput(
+        textFieldValue = viewModel.scale,
+        onValueChange = { viewModel.updateScale(it) },
+        isNumeric = true
+    )
 }

@@ -98,13 +98,16 @@
         <item>Tracer le total annuel</item>
     </string-array>
     <string name="graph_type_last_value">Dernier suivi/Durée depuis</string>
-    <string name="graph_time_durations_all_data">Toutes les données</string>
-    <string name="graph_time_durations_a_day">1 jour</string>
-    <string name="graph_time_durations_a_week">1 semaine</string>
-    <string name="graph_time_durations_a_month">1 mois</string>
-    <string name="graph_time_durations_three_months">3 mois</string>
-    <string name="graph_time_durations_six_months">6 mois</string>
-    <string name="graph_time_durations_a_year">1 an</string>
+    <string-array name="graph_time_durations">
+        <item>Toutes les données</item>
+        <item>1 jour</item>
+        <item>1 semaine</item>
+        <item>1 mois</item>
+        <item>3 mois</item>
+        <item>6 mois</item>
+        <item>1 an</item>
+        <item>Personnalisé</item>
+    </string-array>
     <string-array name="y_range_styles">
         <item>Dynamique</item>
         <item>Fixe</item>
@@ -114,8 +117,6 @@
         <item>Date personnalisée…</item>
     </string-array>
 
-
-    <string name="custom">Personnalisé</string>
     <string name="import_exception_unknown">L\'importation a échoué : une erreur inconnue s\'est produite</string>
     <string name="import_exception_bad_headers">L\'importation a échoué : les en-têtes ne correspondent pas aux en-têtes attendus : %1$s</string>
     <string name="import_exception_inconsistent_record">L\'importation a échoué : l\'enregistrement sur la ligne %1$s ne correspond pas aux en-têtes requis</string>
@@ -182,7 +183,8 @@
     <string name="backup_error_could_not_find_database_file">Impossible de trouver ou de lire le fichier de base de données.</string>
     <string name="backup_error_failed_to_copy_database">Quelque chose s\'est mal passé lors de la copie du fichier de base de données.</string>
     <string name="restore_failed">Restauration échouée. %1$s</string>
-    <string name="add_a_longer_description_optional">Ajoutez une description plus longue (facultative)</string>.
+    <string name="add_a_longer_description_optional">Ajoutez une description plus longue (facultative)</string>
+    <string name="optional_parenthesis">(facultatif)</string>
     <string name="no_data_points_history_fragment_hint">Votre historique de suivi s\'affichera ici lorsque vous aurez saisi des entrées.</string>
     <string name="info">Info</string>
     <string name="no_description">Aucune description</string>
@@ -256,8 +258,8 @@
     <string name="help">Aide</string>
     
     <string name="advanced_options">Options avancées</string>
-    <string name="type_colon">\"Type : \"</string>
-    <string name="order_colon">\"Ordre : \"</string>
+    <string name="suggestions_type">Type</string>
+    <string name="suggestions_order">Ordre</string>
     <string name="value_and_label">Valeur et étiquette</string>
     <string name="value_only">Valeur uniquement</string>
     <string name="label_only">Étiquette uniquement</string>

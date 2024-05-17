@@ -16,30 +16,17 @@
  */
 package com.samco.trackandgraph.ui.compose.ui
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import com.samco.trackandgraph.R
 
 @Composable
-fun RowCheckbox(
-    checked: Boolean,
-    onCheckedChange: ((Boolean) -> Unit)?,
-    text: String
-) = Row(
-    verticalAlignment = Alignment.CenterVertically,
+fun FormFieldSeparator() = Spacer(
     modifier = Modifier
-        .clickable { onCheckedChange?.invoke(!checked) }
-        .padding(end = 14.dp)
-) {
-    Checkbox(
-        checked = checked,
-        onCheckedChange = onCheckedChange,
-    )
-    Text(text = text)
-}
+        .height(dimensionResource(id = R.dimen.form_field_separator_height))
+        .width(dimensionResource(id = R.dimen.half_dialog_input_spacing))
+)

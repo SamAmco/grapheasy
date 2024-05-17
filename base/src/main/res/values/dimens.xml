@@ -48,4 +48,18 @@
     <dimen name="text_body_size">15sp</dimen>
     <dimen name="small_label_size">10sp</dimen>
     <dimen name="card_elevation">4dp</dimen>
+
+    <!-- Forms -->
+    <dimen name="form_padding">22dp</dimen>
+    <dimen name="form_section_padding">15dp</dimen>
+    <dimen name="form_section_corner">20dp</dimen>
+    <dimen name="form_input_padding">12dp</dimen>
+    <dimen name="form_input_corner">12dp</dimen>
+    <dimen name="form_input_border">1dp</dimen>
+    <dimen name="form_input_border_focus">2dp</dimen>
+    <dimen name="form_label_padding_top">5dp</dimen>
+    <dimen name="form_label_padding_bottom">5dp</dimen>
+    <dimen name="form_button_margin_top">20dp</dimen>
+    <dimen name="form_button_padding">2dp</dimen>
+    <dimen name="form_field_separator_height">13dp</dimen>
 </resources>
