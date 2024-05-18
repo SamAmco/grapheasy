@@ -128,7 +128,7 @@
         <item>Fixed</item>
     </string-array>
 
-    <string name="ending_at_latest">Last Data Points</string>
+    <string name="ending_at_latest">Last Data Point</string>
     <string name="ending_at_now">Now</string>
     <string name="ending_at_custom_date">Custom date…</string>
 

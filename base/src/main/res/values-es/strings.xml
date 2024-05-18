@@ -113,7 +113,7 @@
         <item>Fijo</item>
     </string-array>
 
-    <string name="ending_at_latest">Reciente</string>
+    <string name="ending_at_latest">Último punto de datos</string>
     <string name="ending_at_now">Ahora</string>
     <string name="ending_at_custom_date">Fecha personalizada…</string>
 
