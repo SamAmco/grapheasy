@@ -84,7 +84,7 @@ class BarChartDataFactory @Inject constructor(
          *
          * There should be one bar per [barSize] between [endTime] and [endTime] - [sampleSize].
          *
-         * All values in every SimpleXYSeries will be multiplied by [scale]. If you use sumByCount,
+         * All values in every SimpleXYSeries will be multiplied by [scale]. If you use [sumByCount],
          * the value multiplied will be the number of data points for a bar rather than the sum of
          * their values.
          */
@@ -127,6 +127,7 @@ class BarChartDataFactory @Inject constructor(
                     currentBarStartTime = roundedEndTime.minus(barPeriod)
                     currentBarEndTime = roundedEndTime
                     endTimeMinusDuration = sampleSize?.let { roundedEndTime.minus(it) }
+
                     barDates.add(roundedEndTime)
                 }
 
@@ -277,7 +278,7 @@ class BarChartDataFactory @Inject constructor(
             //TODO basically everywhere you see zone id i think you might wanna use time helper
             // and inject it.
             val timeHelper = TimeHelper(GlobalAggregationPreferences)
-            val endTime = config.endDate?.let { timeHelper.toZonedDateTime(it) }
+            val endTime = config.endDate.toOffsetDateTime()?.let { timeHelper.toZonedDateTime(it) }
 
             val barData = withContext(ioDispatcher) {
                 getBarDataWithYAxisParams(

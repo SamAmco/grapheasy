@@ -25,6 +25,7 @@ class DataClippingFunction(
     private val endTime: OffsetDateTime?,
     private val sampleDuration: TemporalAmount?
 ) : DataSampleFunction {
+
     /**
      * Return all the data points in the sample that lie within the sampleDuration leading up to the endTime.
      * If the sampleDuration is null then all data points leading up to the end time will be returned.

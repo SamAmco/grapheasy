@@ -123,7 +123,7 @@ class LineGraphDataFactory @Inject constructor(
 
             //Get the end time of the graph. If not specified it's the time of the last data
             // point of any of the features
-            val endTime = lineGraph.endDate ?: dataSamples
+            val endTime = lineGraph.endDate.toOffsetDateTime() ?: dataSamples
                 .mapNotNull { it.second.firstOrNull() }
                 .maxOfOrNull { it.timestamp }
                 ?: OffsetDateTime.now()
@@ -174,7 +174,7 @@ class LineGraphDataFactory @Inject constructor(
             LineGraphPlottingModes.WHEN_TRACKED -> IdentityFunction()
             else -> CompositeFunction(
                 DurationAggregationFunction(timeHelper, plottingPeriod!!),
-                DataPaddingFunction(timeHelper, config.endDate, config.sampleSize)
+                DataPaddingFunction(timeHelper, config.endDate.toOffsetDateTime(), config.sampleSize)
             )
         }
         val averageCalculator = when (lineGraphFeature.averagingMode) {

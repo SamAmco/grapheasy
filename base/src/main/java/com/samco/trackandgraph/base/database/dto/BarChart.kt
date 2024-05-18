@@ -1,14 +1,13 @@
 package com.samco.trackandgraph.base.database.dto
 
 import com.samco.trackandgraph.base.database.entity.BarChart
-import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.TemporalAmount
 
 data class BarChart(
     val id: Long,
     val graphStatId: Long,
     val featureId: Long,
-    val endDate: OffsetDateTime?,
+    val endDate: GraphEndDate,
     val sampleSize: TemporalAmount?,
     val yRangeType: YRangeType,
     val yTo: Double,

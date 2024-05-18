@@ -16,14 +16,13 @@
 */
 package com.samco.trackandgraph.base.database.dto
 
-import org.threeten.bp.OffsetDateTime
 import com.samco.trackandgraph.base.database.entity.LastValueStat
 
 data class LastValueStat(
     val id: Long,
     val graphStatId: Long,
     val featureId: Long,
-    val endDate: OffsetDateTime?,
+    val endDate: GraphEndDate,
     val fromValue: Double,
     val toValue: Double,
     val labels: List<String>,

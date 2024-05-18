@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.samco.trackandgraph.R
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.PieChart
 import com.samco.trackandgraph.base.model.DataInteractor
 import com.samco.trackandgraph.base.model.di.DefaultDispatcher
@@ -66,7 +67,7 @@ class PieChartConfigViewModel @Inject constructor(
         graphStatId = 0L,
         featureId = -1L,
         sampleSize = null,
-        endDate = null,
+        endDate = GraphEndDate.Latest,
         sumByCount = false
     )
 
@@ -74,7 +75,7 @@ class PieChartConfigViewModel @Inject constructor(
         pieChart = pieChart.copy(
             featureId = this.featureId ?: -1L,
             sampleSize = selectedDuration.temporalAmount,
-            endDate = sampleEndingAt.asDateTime(),
+            endDate = sampleEndingAt.asGraphEndDate(),
             sumByCount = sumByCount
         )
     }

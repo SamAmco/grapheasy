@@ -1,3 +1,19 @@
+/*
+ *  This file is part of Track & Graph
+ *
+ *  Track & Graph is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Track & Graph is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Track & Graph.  If not, see <https://www.gnu.org/licenses/>.
+ */
 @file:OptIn(FlowPreview::class)
 
 package com.samco.trackandgraph.featurehistory
@@ -10,10 +26,31 @@ import com.samco.trackandgraph.base.database.sampling.DataSampleProperties
 import com.samco.trackandgraph.base.model.DataInteractor
 import com.samco.trackandgraph.base.model.di.IODispatcher
 import com.samco.trackandgraph.base.model.di.MainDispatcher
+import com.samco.trackandgraph.ui.compose.ui.Datable
+import com.samco.trackandgraph.ui.compose.ui.DateDisplayResolution
+import com.samco.trackandgraph.ui.compose.ui.DateScrollData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import org.threeten.bp.Duration
+import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
+
+data class DataPointInfo(
+    override val date: OffsetDateTime,
+    val featureId: Long,
+    val value: Double,
+    val label: String,
+    val note: String,
+) : Datable {
+    fun toDataPoint() = DataPoint(
+        timestamp = date,
+        featureId = featureId,
+        value = value,
+        label = label,
+        note = note
+    )
+}
 
 interface FeatureHistoryNavigationViewModel {
     fun initViewModel(featureId: Long)
@@ -21,18 +58,19 @@ interface FeatureHistoryNavigationViewModel {
     fun showUpdateAllDialog()
 }
 
+//TODO we should probably add a loading state for this when we're first loading the data
 interface FeatureHistoryViewModel : UpdateDialogViewModel {
     val tracker: LiveData<Tracker?>
-    val dataPoints: LiveData<List<DataPoint>>
+    val dateScrollData: LiveData<DateScrollData<DataPointInfo>>
     val showFeatureInfo: LiveData<Feature?>
-    val showDataPointInfo: LiveData<DataPoint?>
+    val showDataPointInfo: LiveData<DataPointInfo?>
     val showDeleteConfirmDialog: LiveData<Boolean>
     val showUpdateDialog: LiveData<Boolean>
 
-    fun onDeleteClicked(dataPoint: DataPoint)
+    fun onDeleteClicked(dataPoint: DataPointInfo)
     fun onDeleteConfirmed()
     fun onDeleteDismissed()
-    fun onDataPointClicked(dataPoint: DataPoint)
+    fun onDataPointClicked(dataPoint: DataPointInfo)
     fun onDismissDataPoint()
     fun onShowFeatureInfo()
     fun onHideFeatureInfo()
@@ -50,7 +88,7 @@ class FeatureHistoryViewModelImpl @Inject constructor(
 
     private data class RawData(
         val dataSampleProperties: DataSampleProperties,
-        val dataPoints: List<DataPoint>
+        val dataPoints: List<DataPointInfo>
     )
 
     private val dataUpdates = dataInteractor
@@ -67,6 +105,7 @@ class FeatureHistoryViewModelImpl @Inject constructor(
                     dataSample.dataSampleProperties,
                     dataSample.getAllRawDataPoints()
                         .sortedByDescending { it.timestamp.toEpochSecond() }
+                        .map { it.toDataPointInfo() }
                 )
                 dataSample.dispose()
                 return@map answer
@@ -77,9 +116,24 @@ class FeatureHistoryViewModelImpl @Inject constructor(
         it.dataSampleProperties.isDuration
     }.asLiveData(viewModelScope.coroutineContext)
 
-    override val dataPoints: LiveData<List<DataPoint>> = dataSample.map {
-        it.dataPoints
-    }.asLiveData(viewModelScope.coroutineContext)
+    override val dateScrollData: LiveData<DateScrollData<DataPointInfo>> = dataSample
+        .filter { it.dataPoints.isNotEmpty() }
+        .map { it.dataPoints }
+        .map { dataPoints ->
+            val range = Duration
+                .between(dataPoints.last().date, dataPoints.first().date)
+                .abs()
+
+            val dateDisplayResolution = when {
+                range.toDays() > 365 -> DateDisplayResolution.MONTH_YEAR
+                else -> DateDisplayResolution.MONTH_DAY
+            }
+
+            DateScrollData(
+                dateDisplayResolution = dateDisplayResolution,
+                items = dataPoints
+            )
+        }.asLiveData(viewModelScope.coroutineContext)
 
     private val showFeatureInfoFlow = MutableStateFlow(false)
 
@@ -89,9 +143,9 @@ class FeatureHistoryViewModelImpl @Inject constructor(
         if (show) feature else null
     }.asLiveData(viewModelScope.coroutineContext)
 
-    override val showDataPointInfo = MutableLiveData<DataPoint?>(null)
+    override val showDataPointInfo = MutableLiveData<DataPointInfo?>(null)
 
-    private val confirmDeleteDataPoint = MutableStateFlow<DataPoint?>(null)
+    private val confirmDeleteDataPoint = MutableStateFlow<DataPointInfo?>(null)
 
     override val showDeleteConfirmDialog = confirmDeleteDataPoint
         .map { it != null }
@@ -114,14 +168,14 @@ class FeatureHistoryViewModelImpl @Inject constructor(
         viewModelScope.launch(io) { featureIdFlow.emit(featureId) }
     }
 
-    override fun onDeleteClicked(dataPoint: DataPoint) {
+    override fun onDeleteClicked(dataPoint: DataPointInfo) {
         confirmDeleteDataPoint.value = dataPoint
     }
 
     override fun onDeleteConfirmed() {
         viewModelScope.launch(io) {
             confirmDeleteDataPoint.value?.let {
-                dataInteractor.deleteDataPoint(it)
+                dataInteractor.deleteDataPoint(it.toDataPoint())
             }
             confirmDeleteDataPoint.value = null
         }
@@ -131,7 +185,7 @@ class FeatureHistoryViewModelImpl @Inject constructor(
         confirmDeleteDataPoint.value = null
     }
 
-    override fun onDataPointClicked(dataPoint: DataPoint) {
+    override fun onDataPointClicked(dataPoint: DataPointInfo) {
         showFeatureInfoFlow.value = false
         showDataPointInfo.value = dataPoint
     }
@@ -177,4 +231,12 @@ class FeatureHistoryViewModelImpl @Inject constructor(
         showUpdateDialog.value = false
         showUpdateWarning.value = false
     }
+
+    private fun DataPoint.toDataPointInfo() = DataPointInfo(
+        date = timestamp,
+        featureId = featureId,
+        value = value,
+        label = label,
+        note = note,
+    )
 }

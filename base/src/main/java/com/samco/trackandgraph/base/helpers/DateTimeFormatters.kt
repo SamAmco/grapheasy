@@ -20,14 +20,14 @@ package com.samco.trackandgraph.base.helpers
 import android.content.Context
 import android.text.format.DateUtils
 import com.samco.trackandgraph.base.R
-import com.samco.trackandgraph.base.database.dto.IDataPoint
 import com.samco.trackandgraph.base.database.dto.DataPoint
+import com.samco.trackandgraph.base.database.dto.IDataPoint
+import org.threeten.bp.Duration
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.ChronoUnit
 import org.threeten.bp.temporal.Temporal
-import org.threeten.bp.temporal.TemporalAmount
 import java.text.DecimalFormat
+
 
 //TODO should really refactor all this stuff into classes and interfaces
 
@@ -219,7 +219,18 @@ fun formatTimeToDaysHoursMinutesSeconds(
 }
 
 fun formatRelativeTimeSpan(
+    context: Context,
     dateTime: OffsetDateTime
 ): String {
-    return DateUtils.getRelativeTimeSpanString(dateTime.toInstant().toEpochMilli()).toString()
+    //There's a special case here where the time since is less than a day and more than an hour ago
+    //because DateUtils.getRelativeTimeSpanString() will not mention how many minutes ago it was. So
+    //it would just say 1 hour ago even if it was 1 hour and 59 minutes ago.
+    //DateUtils.getRelativeTimeSpanString() still does most of the logic though for the various
+    //edge cases and across locales
+    val duration = Duration.between(dateTime, OffsetDateTime.now())
+    return if (!duration.isNegative && duration.toDays() < 1 && duration.toMinutes() > 60) {
+        val hours = duration.toHours()
+        val minutes = duration.toMinutes() % 60
+        context.getString(R.string.hours_and_minutes_ago, hours, minutes)
+    } else DateUtils.getRelativeTimeSpanString(dateTime.toInstant().toEpochMilli()).toString()
 }

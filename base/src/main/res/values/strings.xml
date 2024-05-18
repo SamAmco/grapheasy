@@ -127,11 +127,12 @@
         <item>Dynamic</item>
         <item>Fixed</item>
     </string-array>
-    <string-array name="ending_at_values">
-        <item>Latest</item>
-        <item>Custom date…</item>
-    </string-array>
 
+    <string name="ending_at_latest">Last Data Points</string>
+    <string name="ending_at_now">Now</string>
+    <string name="ending_at_custom_date">Custom date…</string>
+
+    <string name="hours_and_minutes_ago">%1$dh %2$dm ago</string>
 
     <string name="import_exception_unknown">Import failed: An unknown error occurred</string>
     <string name="import_exception_bad_headers">Import failed: Headers did not match the expected headers: %1$s</string>
@@ -269,8 +270,8 @@
     <string name="data_point_tutorial_page_3_description">Use labels if you want to group the data points</string>
     <string name="data_point_tutorial_page_3_hint">(Hint: If you want to add more context or description use the note instead of the label field)</string>
     <string name="help">Help</string>
-    <string name="faq_page_link" translatable="false">https://github.com/SamAmco/track-and-graph/blob/release/v3.8.2/docs/faq/index.md#faq</string>
-    <string name="faq_page_link_1" translatable="false">https://github.com/SamAmco/track-and-graph/blob/release/v3.8.2/docs/faq/faq_1.md#how-do-i-start-tracking-something</string>
+    <string name="faq_page_link" translatable="false">https://github.com/SamAmco/track-and-graph/blob/release/v4.0.0/docs/faq/index.md#faq</string>
+    <string name="faq_page_link_1" translatable="false">https://github.com/SamAmco/track-and-graph/blob/release/v4.0.0/docs/faq/faq_1.md#how-do-i-start-tracking-something</string>
     <string name="advanced_options">Advanced options</string>
     <string name="suggestions_type">Type</string>
     <string name="suggestions_order">Order</string>

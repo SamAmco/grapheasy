@@ -21,6 +21,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.YRangeType
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.TemporalAmount
@@ -55,5 +56,5 @@ internal data class LineGraph(
     val yTo: Double,
 
     @ColumnInfo(name = "end_date")
-    val endDate: OffsetDateTime?
+    val endDate: GraphEndDate?
 )

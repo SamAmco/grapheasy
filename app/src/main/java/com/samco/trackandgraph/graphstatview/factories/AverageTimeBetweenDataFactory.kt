@@ -133,7 +133,7 @@ class AverageTimeBetweenDataFactory @Inject constructor(
         val filters = mutableListOf<DataSampleFunction>()
         if (config.filterByLabels) filters.add(FilterLabelFunction(config.labels.toSet()))
         if (config.filterByRange) filters.add(FilterValueFunction(config.fromValue, config.toValue))
-        filters.add(DataClippingFunction(config.endDate, config.sampleSize))
+        filters.add(DataClippingFunction(config.endDate.toOffsetDateTime(), config.sampleSize))
         return CompositeFunction(filters).mapSample(dataSample)
     }
 }

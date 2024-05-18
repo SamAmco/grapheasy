@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.samco.trackandgraph.R
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.TimeHistogram
 import com.samco.trackandgraph.base.database.dto.TimeHistogramWindow
 import com.samco.trackandgraph.base.model.DataInteractor
@@ -72,7 +73,7 @@ class TimeHistogramConfigViewModel @Inject constructor(
         sampleSize = null,
         window = TimeHistogramWindow.DAY,
         sumByCount = false,
-        endDate = null
+        endDate = GraphEndDate.Latest
     )
 
     override fun updateConfig() {
@@ -81,7 +82,7 @@ class TimeHistogramConfigViewModel @Inject constructor(
             sampleSize = timeRangeConfigBehaviour.selectedDuration.temporalAmount,
             window = selectedWindow,
             sumByCount = sumByCount,
-            endDate = timeRangeConfigBehaviour.sampleEndingAt.asDateTime()
+            endDate = timeRangeConfigBehaviour.sampleEndingAt.asGraphEndDate()
         )
     }
 

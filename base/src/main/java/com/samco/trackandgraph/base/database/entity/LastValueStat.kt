@@ -21,6 +21,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import org.threeten.bp.OffsetDateTime
 import com.samco.trackandgraph.base.database.dto.LastValueStat
 
@@ -51,7 +52,7 @@ internal data class LastValueStat(
     val featureId: Long,
 
     @ColumnInfo(name = "end_date")
-    val endDate: OffsetDateTime?,
+    val endDate: GraphEndDate?,
 
     @ColumnInfo(name = "from_value")
     val fromValue: Double,
@@ -72,7 +73,7 @@ internal data class LastValueStat(
         id = id,
         graphStatId = graphStatId,
         featureId = featureId,
-        endDate = endDate,
+        endDate = endDate ?: GraphEndDate.Latest,
         fromValue = fromValue,
         toValue = toValue,
         labels = labels,

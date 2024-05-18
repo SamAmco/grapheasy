@@ -1,6 +1,6 @@
 # Track & Graph
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-14-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 An android app for tracking personal data and creating custom graphs
 
@@ -72,6 +72,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/steel-steven-87"><img src="https://avatars.githubusercontent.com/u/89798696?v=4?s=100" width="100px;" alt="steel-steven-87"/><br /><sub><b>steel-steven-87</b></sub></a><br /><a href="https://github.com/SamAmco/track-and-graph/issues?q=author%3Asteel-steven-87" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/stfnw"><img src="https://avatars.githubusercontent.com/u/28357058?v=4?s=100" width="100px;" alt="Stefan Walter"/><br /><sub><b>Stefan Walter</b></sub></a><br /><a href="#translation-stfnw" title="Translation">🌍</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/PropellantDyke"><img src="https://avatars.githubusercontent.com/u/118541570?v=4?s=100" width="100px;" alt="PropellantDyke"/><br /><sub><b>PropellantDyke</b></sub></a><br /><a href="https://github.com/SamAmco/track-and-graph/commits?author=PropellantDyke" title="Code">💻</a> <a href="#design-PropellantDyke" title="Design">🎨</a> <a href="#translation-PropellantDyke" title="Translation">🌍</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://git.dece.space/dece"><img src="https://avatars.githubusercontent.com/u/6729523?v=4?s=100" width="100px;" alt="Adrien Abraham"/><br /><sub><b>Adrien Abraham</b></sub></a><br /><a href="#translation-dece" title="Translation">🌍</a></td>
     </tr>
   </tbody>
 </table>

@@ -17,7 +17,6 @@
 
 package com.samco.trackandgraph.base.database.dto
 
-import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.TemporalAmount
 import com.samco.trackandgraph.base.database.entity.LineGraph
 
@@ -28,7 +27,7 @@ data class LineGraph(
     val yRangeType: YRangeType,
     val yFrom: Double,
     val yTo: Double,
-    val endDate: OffsetDateTime?
+    val endDate: GraphEndDate
 ) {
     internal fun toEntity() = LineGraph(
         id,

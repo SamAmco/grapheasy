@@ -134,6 +134,15 @@
         "design",
         "translation"
       ]
+    },
+    {
+      "login": "dece",
+      "name": "Adrien Abraham",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6729523?v=4",
+      "profile": "https://git.dece.space/dece",
+      "contributions": [
+        "translation"
+      ]
     }
   ],
   "contributorsPerLine": 7,

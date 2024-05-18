@@ -1,0 +1,4 @@
+- Fix group dialog crashing the app
+- Fix copy in group dialog wrong for update group
+
+

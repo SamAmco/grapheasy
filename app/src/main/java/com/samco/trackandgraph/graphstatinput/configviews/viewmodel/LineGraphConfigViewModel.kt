@@ -128,13 +128,13 @@ class LineGraphConfigViewModel @Inject constructor(
         yRangeType = YRangeType.DYNAMIC,
         yFrom = 0.0,
         yTo = 1.0,
-        endDate = null
+        endDate = GraphEndDate.Latest
     )
 
     override fun updateConfig() {
         lineGraph = lineGraph.copy(
             sampleSize = selectedDuration.temporalAmount,
-            endDate = sampleEndingAt.asDateTime(),
+            endDate = sampleEndingAt.asGraphEndDate(),
             yRangeType = yRangeType,
             features = lineGraphFeatures.mapIndexed { index, f ->
                 f.copy(

@@ -112,10 +112,12 @@
         <item>Dynamique</item>
         <item>Fixe</item>
     </string-array>
-    <string-array name="ending_at_values">
-        <item>Dernières</item>
-        <item>Date personnalisée…</item>
-    </string-array>
+
+    <string name="ending_at_latest">Dernières</string>
+    <string name="ending_at_now">Maintenant</string>
+    <string name="ending_at_custom_date">Date personnalisée…</string>
+
+    <string name="hours_and_minutes_ago">il y a %1$dh %2$dmin</string>
 
     <string name="import_exception_unknown">L\'importation a échoué : une erreur inconnue s\'est produite</string>
     <string name="import_exception_bad_headers">L\'importation a échoué : les en-têtes ne correspondent pas aux en-têtes attendus : %1$s</string>

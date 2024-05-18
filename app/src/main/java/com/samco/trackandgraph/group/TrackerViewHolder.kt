@@ -36,12 +36,14 @@ class TrackerViewHolder private constructor(
     private var tracker: DisplayTracker? = null
     private var dropElevation = 0f
 
+    private val context = binding.root.context
+
     fun bind(tracker: DisplayTracker, clickListener: TrackerClickListener) {
         this.tracker = tracker
         this.clickListener = clickListener
         this.dropElevation = binding.cardView.cardElevation
         setLastDateText()
-        binding.trackGroupNameText.text = tracker.name
+        binding.trackerNameText.text = tracker.name
         binding.menuButton.setOnClickListener { createContextMenu(binding.menuButton) }
         initClickEvents(tracker, clickListener)
         initTimerControls(tracker, clickListener)
@@ -78,10 +80,6 @@ class TrackerViewHolder private constructor(
     override fun update() {
         super.update()
         updateTimerText()
-    }
-
-    override fun onResume() {
-        super.onResume()
         setLastDateText()
     }
 
@@ -100,7 +98,7 @@ class TrackerViewHolder private constructor(
             val rect = binding.innerLayoutContainer
 
             //45dp in px
-            val cornerSize = 45 * binding.root.context.resources.displayMetrics.density
+            val cornerSize = 45 * context.resources.displayMetrics.density
 
             lastX > (rect.width - cornerSize)
                     && lastX < rect.width
@@ -141,16 +139,14 @@ class TrackerViewHolder private constructor(
     private fun setLastDateText() {
         val timestamp = tracker?.timestamp
         binding.lastDateText.text = if (timestamp == null) {
-            binding.lastDateText.context.getString(R.string.no_data)
+            context.getString(R.string.no_data)
         } else {
-            formatRelativeTimeSpan(timestamp)
+            formatRelativeTimeSpan(context, timestamp)
         }
     }
 
     override fun elevateCard() {
-        binding.cardView.postDelayed({
-            binding.cardView.cardElevation = binding.cardView.cardElevation * 3f
-        }, 10)
+        binding.cardView.postDelayed({ binding.cardView.cardElevation *= 3f }, 10)
     }
 
     override fun dropCard() {

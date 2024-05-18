@@ -112,10 +112,13 @@
         <item>Dinámico</item>
         <item>Fijo</item>
     </string-array>
-    <string-array name="ending_at_values">
-        <item>Reciente</item>
-        <item>Fecha personalizada…</item>
-    </string-array>
+
+    <string name="ending_at_latest">Reciente</string>
+    <string name="ending_at_now">Ahora</string>
+    <string name="ending_at_custom_date">Fecha personalizada…</string>
+
+    <string name="hours_and_minutes_ago">%1$d h %2$d min hace</string>
+
     <string name="import_exception_unknown">Error de importación: Se ha producido un error desconocido</string>
     <string name="import_exception_bad_headers">Error de importación: Las cabeceras no coinciden con las esperadas: %1$s</string>
     <string name="import_exception_inconsistent_record">Error de importación: Lq traza de la línea %1$s no es consistente con las cabeceras requeridas</string>

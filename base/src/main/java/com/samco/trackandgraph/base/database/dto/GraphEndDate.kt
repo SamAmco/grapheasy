@@ -14,28 +14,20 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Track & Graph.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 package com.samco.trackandgraph.base.database.dto
 
-import com.samco.trackandgraph.base.database.entity.TimeHistogram
-import org.threeten.bp.temporal.TemporalAmount
+import org.threeten.bp.OffsetDateTime
 
-data class TimeHistogram(
-    val id: Long,
-    val graphStatId: Long,
-    val featureId: Long,
-    val sampleSize: TemporalAmount?,
-    val window: TimeHistogramWindow,
-    val sumByCount: Boolean,
-    val endDate: GraphEndDate
-) {
-    internal fun toEntity() = TimeHistogram(
-        id = id,
-        graphStatId = graphStatId,
-        featureId = featureId,
-        sampleSize = sampleSize,
-        window = window,
-        sumByCount = sumByCount,
-        endDate = endDate
-    )
+sealed class GraphEndDate {
+    object Latest : GraphEndDate()
+    object Now : GraphEndDate()
+    data class Date(val date: OffsetDateTime) : GraphEndDate()
+
+    fun toOffsetDateTime(): OffsetDateTime? {
+        return when (this) {
+            is Latest -> null
+            is Now -> OffsetDateTime.now()
+            is Date -> date
+        }
+    }
 }

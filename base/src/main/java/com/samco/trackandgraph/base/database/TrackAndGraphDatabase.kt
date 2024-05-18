@@ -51,7 +51,7 @@ import java.lang.Exception
 
 private val databaseFormatter: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
-const val TNG_DATABASE_VERSION = 54
+const val TNG_DATABASE_VERSION = 55
 
 @Database(
     entities = [
@@ -192,7 +192,8 @@ internal class Converters {
         value?.let { stringFromOdt(it) } ?: ""
 
     @TypeConverter
-    fun temporalAmountToString(value: TemporalAmount?): String = value?.let { value.toString() } ?: ""
+    fun temporalAmountToString(value: TemporalAmount?): String =
+        value?.let { value.toString() } ?: ""
 
     @TypeConverter
     fun stringToTemporalAmount(value: String): TemporalAmount? = when {
@@ -259,12 +260,28 @@ internal class Converters {
 
     @TypeConverter
     fun intToTimeHistogramWindow(index: Int) = TimeHistogramWindow.values()[index]
+
+    @TypeConverter
+    fun graphEndDateToString(value: GraphEndDate): String? = when (value) {
+        is GraphEndDate.Date -> stringFromOdt(value.date)
+        is GraphEndDate.Now -> "now"
+        GraphEndDate.Latest -> null
+    }
+
+    @TypeConverter
+    fun stringToGraphEndDate(value: String?): GraphEndDate {
+        return when (value) {
+            "now" -> GraphEndDate.Now
+            null -> GraphEndDate.Latest
+            else -> {
+                val odt = odtFromString(value)
+                if (odt == null) GraphEndDate.Latest
+                else GraphEndDate.Date(odt)
+            }
+        }
+    }
 }
 
-//TODO It turns out that parsing an OffsetDateTime allocates quite a lot of memory and takes a long
-// time. It often triggers the garbage collector, when reading a lot of data points, causing frame drops
-// while opening a group :/  It would be really nice to find a more minimal database representation
-// that's faster to read back and doesn't allocate as much memory.
 fun odtFromString(value: String): OffsetDateTime? =
     if (value.isEmpty()) null
     else databaseFormatter.parse(value, OffsetDateTime::from)

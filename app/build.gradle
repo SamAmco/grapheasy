@@ -40,8 +40,9 @@ android {
         applicationId "com.samco.trackandgraph"
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 300802
-        versionName "3.8.2"
+        //If the backup file is not backwards compatible after this update, upgrade the major version number!
+        versionCode 400000
+        versionName "4.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables {

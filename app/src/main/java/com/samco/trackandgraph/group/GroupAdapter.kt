@@ -165,12 +165,7 @@ abstract class GroupChildViewHolder(view: View) : RecyclerView.ViewHolder(view) 
     abstract fun dropCard()
 
     /**
-     * @brief Called each seconds, usually to refresh precise timers
+     * @brief Called each seconds, usually to refresh timers
      */
     open fun update() {}
-
-    /**
-     * @brief Called when the application is resumed, usually to refresh loose timers
-     */
-    open fun onResume() {}
 }

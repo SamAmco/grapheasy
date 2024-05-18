@@ -18,6 +18,7 @@ package com.samco.trackandgraph.graphstatinput.configviews.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.samco.trackandgraph.R
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.LastValueStat
 import com.samco.trackandgraph.base.model.DataInteractor
 import com.samco.trackandgraph.base.model.di.DefaultDispatcher
@@ -72,7 +73,7 @@ class LastValueConfigViewModel @Inject constructor(
         id = 0,
         graphStatId = 0,
         featureId = -1L,
-        endDate = null,
+        endDate = GraphEndDate.Latest,
         fromValue = 0.0,
         toValue = 0.0,
         labels = emptyList(),
@@ -83,7 +84,7 @@ class LastValueConfigViewModel @Inject constructor(
     override fun updateConfig() {
         lastValueStat = lastValueStat.copy(
             featureId = singleFeatureConfigBehaviour.featureId ?: -1L,
-            endDate = endingAtConfigBehaviour.sampleEndingAt.asDateTime(),
+            endDate = endingAtConfigBehaviour.sampleEndingAt.asGraphEndDate(),
             fromValue = filterableFeatureConfigBehaviour.fromValue.text.toDoubleOrNull() ?: 0.0,
             toValue = filterableFeatureConfigBehaviour.toValue.text.toDoubleOrNull() ?: 1.0,
             labels = filterableFeatureConfigBehaviour.selectedLabels,

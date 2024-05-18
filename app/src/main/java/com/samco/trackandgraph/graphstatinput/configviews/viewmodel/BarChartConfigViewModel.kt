@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.base.database.dto.BarChart
 import com.samco.trackandgraph.base.database.dto.BarChartBarPeriod
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.YRangeType
 import com.samco.trackandgraph.base.model.DataInteractor
 import com.samco.trackandgraph.base.model.di.DefaultDispatcher
@@ -102,7 +103,7 @@ class BarChartConfigViewModel @Inject constructor(
         id = 0,
         graphStatId = 0,
         featureId = 0,
-        endDate = null,
+        endDate = GraphEndDate.Latest,
         sampleSize = null,
         yRangeType = YRangeType.DYNAMIC,
         yTo = 1.0,
@@ -114,7 +115,7 @@ class BarChartConfigViewModel @Inject constructor(
     override fun updateConfig() {
         barChart = barChart.copy(
             featureId = this.featureId ?: -1,
-            endDate = sampleEndingAt.asDateTime(),
+            endDate = sampleEndingAt.asGraphEndDate(),
             sampleSize = selectedDuration.temporalAmount,
             yRangeType = yRangeType,
             yTo = getYTo(),

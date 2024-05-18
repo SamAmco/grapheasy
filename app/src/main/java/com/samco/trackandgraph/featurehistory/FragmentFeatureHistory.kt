@@ -50,7 +50,7 @@ class FragmentFeatureHistory : Fragment() {
     ): View {
         viewModel.initViewModel(args.featureId)
         viewModel.tracker.map { it != null }.observe(viewLifecycleOwner) { initMenuProvider(it) }
-        viewModel.dataPoints.map { it.size }.observe(viewLifecycleOwner) { updateDataPointsCount(it) }
+        viewModel.dateScrollData.map { it.items.size }.observe(viewLifecycleOwner) { updateDataPointsCount(it) }
 
         return ComposeView(requireContext()).apply {
             setContent {

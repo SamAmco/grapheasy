@@ -18,8 +18,6 @@ package com.samco.trackandgraph.featurehistory
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,13 +29,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.adddatapoint.AddDataPointsDialog
 import com.samco.trackandgraph.adddatapoint.AddDataPointsNavigationViewModel
 import com.samco.trackandgraph.adddatapoint.AddDataPointsViewModelImpl
-import com.samco.trackandgraph.base.database.dto.DataPoint
 import com.samco.trackandgraph.base.database.dto.Tracker
 import com.samco.trackandgraph.base.helpers.formatDayMonthYearHourMinuteWeekDayTwoLines
 import com.samco.trackandgraph.base.helpers.getWeekDayNames
@@ -46,7 +42,7 @@ import com.samco.trackandgraph.ui.compose.ui.*
 
 @Composable
 fun FeatureHistoryView(viewModel: FeatureHistoryViewModel) {
-    val dataPoints by viewModel.dataPoints.observeAsState(emptyList())
+    val dateScrollData = viewModel.dateScrollData.observeAsState().value
     val weekdayNames = getWeekDayNames(LocalContext.current)
     val isDuration by viewModel.isDuration.observeAsState(false)
     val tracker by viewModel.tracker.observeAsState(null)
@@ -54,21 +50,22 @@ fun FeatureHistoryView(viewModel: FeatureHistoryViewModel) {
     val dataPointInfo by viewModel.showDataPointInfo.observeAsState()
     val dataPointDialogViewModel = hiltViewModel<AddDataPointsViewModelImpl>()
 
-    if (dataPoints.isEmpty()) {
+    if (dateScrollData == null || dateScrollData.items.isEmpty()) {
         EmptyScreenText(textId = R.string.no_data_points_history_fragment_hint)
     } else {
-        LazyColumn(modifier = Modifier.padding(dimensionResource(id = R.dimen.card_margin_small))) {
-            items(dataPoints) {
-                DataPoint(
-                    dataPoint = it,
-                    addDataPointsViewModel = dataPointDialogViewModel,
-                    viewModel = viewModel,
-                    weekdayNames = weekdayNames,
-                    isDuration = isDuration,
-                    tracker = tracker
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-            }
+        DateScrollLazyColumn(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.card_margin_small)),
+            data = dateScrollData
+        ) {
+            DataPoint(
+                dataPoint = it,
+                addDataPointsViewModel = dataPointDialogViewModel,
+                viewModel = viewModel,
+                weekdayNames = weekdayNames,
+                isDuration = isDuration,
+                tracker = tracker
+            )
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.card_margin_small)))
         }
     }
 
@@ -81,7 +78,7 @@ fun FeatureHistoryView(viewModel: FeatureHistoryViewModel) {
 
     dataPointInfo?.let {
         DataPointInfoDialog(
-            dataPoint = it,
+            dataPoint = it.toDataPoint(),
             weekdayNames = weekdayNames,
             isDuration = isDuration,
             onDismissRequest = viewModel::onDismissDataPoint
@@ -265,7 +262,7 @@ private fun WhereValueInput(
 
 @Composable
 private fun DataPoint(
-    dataPoint: DataPoint,
+    dataPoint: DataPointInfo,
     addDataPointsViewModel: AddDataPointsNavigationViewModel,
     viewModel: FeatureHistoryViewModel,
     weekdayNames: List<String>,
@@ -285,7 +282,7 @@ private fun DataPoint(
             text = formatDayMonthYearHourMinuteWeekDayTwoLines(
                 LocalContext.current,
                 weekdayNames,
-                dataPoint.timestamp
+                dataPoint.date
             ),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.body2,
@@ -293,14 +290,14 @@ private fun DataPoint(
         SpacingSmall()
         DataPointValueAndDescription(
             modifier = Modifier.weight(1f),
-            dataPoint = dataPoint,
+            dataPoint = dataPoint.toDataPoint(),
             isDuration = isDuration
         )
         if (tracker != null) {
             IconButton(onClick = {
                 addDataPointsViewModel.showAddDataPointDialog(
                     trackerId = tracker.id,
-                    dataPointTimestamp = dataPoint.timestamp
+                    dataPointTimestamp = dataPoint.date
                 )
             }) {
                 Icon(

@@ -112,10 +112,12 @@
         <item>Dynamisch</item>
         <item>Fixiert</item>
     </string-array>
-    <string-array name="ending_at_values">
-        <item>Aktuellste</item>
-        <item>Benutzerdefiniertes Datum…</item>
-    </string-array>
+
+    <string name="ending_at_latest">Letzter Datenpunkt</string>
+    <string name="ending_at_now">Jetzt</string>
+    <string name="ending_at_custom_date">Benutzerdefiniertes Datum…</string>
+
+    <string name="hours_and_minutes_ago">vor %1$d Std. %2$d Min.</string>
 
     <string name="import_exception_unknown">Import fehlgeschlagen: Ein unbekannter Fehler ist aufgetreten</string>
     <string name="import_exception_bad_headers">Import fehlgeschlagen: Kopfzeilen stimmten nicht mit den erwarteten Kopfzeilen überein: %1$s</string>
@@ -182,7 +184,6 @@
     <string name="backup_error_failed_to_copy_database">Beim Kopieren der Datenbankdatei ging etwas schief.</string>
     <string name="restore_failed">Wiederherstellung fehlgeschlagen. %1$s</string>
     <string name="add_a_longer_description_optional">Eine längere Beschreibung hinzufügen (optional)</string>
-    <string name="add_a_longer_description">Eine längere Beschreibung hinzufügen</string>
     <string name="optional_parenthesis">(optional)</string>
     <string name="no_data_points_history_fragment_hint">Ihr Tracking-Verlauf wird hier angezeigt, wenn Sie einige Daten eingegeben haben.</string>
     <string name="info">Info</string>

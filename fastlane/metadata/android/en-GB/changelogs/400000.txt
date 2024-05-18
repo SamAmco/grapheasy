@@ -1,0 +1,4 @@
+- Added date scroll bar for long lists
+- Add "Now" as a graph end date option
+- Tracker cards show greater precision for times less than 24 hours
+- Fix bug default duration not showing when updating a tracker

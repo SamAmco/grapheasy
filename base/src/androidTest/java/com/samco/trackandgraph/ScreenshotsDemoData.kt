@@ -20,6 +20,7 @@ package com.samco.trackandgraph
 import com.samco.trackandgraph.base.database.dto.CheckedDays
 import com.samco.trackandgraph.base.database.dto.DataType
 import com.samco.trackandgraph.base.database.dto.DurationPlottingMode
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.GraphOrStat
 import com.samco.trackandgraph.base.database.dto.GraphStatType
 import com.samco.trackandgraph.base.database.dto.LastValueStat
@@ -144,7 +145,7 @@ private suspend fun createStressfulDaysHistogram(
         sampleSize = null,
         window = TimeHistogramWindow.WEEK,
         sumByCount = false,
-        endDate = null
+        endDate = GraphEndDate.Latest
     )
 
     dataInteractor.insertTimeHistogram(graphStat, timeHistogram)
@@ -167,7 +168,7 @@ private suspend fun createTimeSinceDayOff(
         id = 0L,
         graphStatId = 0L,
         featureId = dayOffFeatureId,
-        endDate = null,
+        endDate = GraphEndDate.Latest,
         fromValue = 0.0,
         toValue = 1.0,
         labels = emptyList(),
@@ -196,7 +197,7 @@ private suspend fun createStressPieChart(
         graphStatId = 0L,
         featureId = stressFeatureId,
         sampleSize = null,
-        endDate = null,
+        endDate = GraphEndDate.Latest,
         sumByCount = true
     )
 
@@ -360,7 +361,7 @@ private suspend fun createExerciseGraph2(
         yRangeType = YRangeType.DYNAMIC,
         yFrom = 0.0,
         yTo = 0.0,
-        endDate = null
+        endDate = GraphEndDate.Latest
     )
 
     dataInteractor.insertLineGraph(graphStat, lineGraph)
@@ -441,7 +442,7 @@ private suspend fun createExerciseGraph1(
         yRangeType = YRangeType.DYNAMIC,
         yFrom = 0.0,
         yTo = 0.0,
-        endDate = null
+        endDate = GraphEndDate.Latest
     )
 
     dataInteractor.insertLineGraph(graphStat, lineGraph)

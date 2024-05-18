@@ -22,6 +22,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.samco.trackandgraph.base.database.dto.BarChartBarPeriod
 import com.samco.trackandgraph.base.database.dto.BarChart
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.YRangeType
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.TemporalAmount
@@ -55,7 +56,7 @@ internal data class BarChart(
     val featureId: Long,
 
     @ColumnInfo(name = "end_date")
-    val endDate: OffsetDateTime?,
+    val endDate: GraphEndDate?,
 
     @ColumnInfo(name = "duration")
     val sampleSize: TemporalAmount?,
@@ -79,7 +80,7 @@ internal data class BarChart(
         id = id,
         graphStatId = graphStatId,
         featureId = featureId,
-        endDate = endDate,
+        endDate = endDate ?: GraphEndDate.Latest,
         sampleSize = sampleSize,
         yRangeType = yRangeType,
         yTo = yTo,

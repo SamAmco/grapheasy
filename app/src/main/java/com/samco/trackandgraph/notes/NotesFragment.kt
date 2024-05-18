@@ -20,33 +20,24 @@ package com.samco.trackandgraph.notes
 import android.os.Bundle
 import android.view.*
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.samco.trackandgraph.MainActivity
 import com.samco.trackandgraph.NavButtonStyle
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.adddatapoint.AddDataPointsViewModelImpl
-import com.samco.trackandgraph.base.database.dto.DisplayNote
-import com.samco.trackandgraph.base.helpers.getWeekDayNames
-import com.samco.trackandgraph.databinding.FragmentNotesBinding
 import com.samco.trackandgraph.settings.TngSettings
 import com.samco.trackandgraph.ui.compose.compositionlocals.LocalSettings
-import com.samco.trackandgraph.util.FeaturePathProvider
-import com.samco.trackandgraph.ui.showNoteDialog
-import com.samco.trackandgraph.util.bindingForViewLifecycle
+import com.samco.trackandgraph.ui.compose.theming.TnGComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotesFragment : Fragment() {
-    private var binding: FragmentNotesBinding by bindingForViewLifecycle()
-    private lateinit var adapter: NoteListAdapter
-
-    private val viewModel by viewModels<NotesViewModel>()
+    private val notesViewModel by viewModels<NotesViewModel>()
     private val addDataPointsDialogViewModel by viewModels<AddDataPointsViewModelImpl>()
     private val globalNoteDialogViewModel: GlobalNoteInputViewModel by viewModels<GlobalNoteInputViewModelImpl>()
 
@@ -58,21 +49,19 @@ class NotesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNotesBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
-
-        binding.composeView.setContent {
-            CompositionLocalProvider(LocalSettings provides tngSettings) {
-                NotesView(
-                    addDataPointsDialogViewModel = addDataPointsDialogViewModel,
-                    globalNoteDialogViewModel = globalNoteDialogViewModel
-                )
+        return ComposeView(requireContext()).apply {
+            setContent {
+                CompositionLocalProvider(LocalSettings provides tngSettings) {
+                    TnGComposeTheme {
+                        NotesView(
+                            notesViewModel = notesViewModel,
+                            addDataPointsDialogViewModel = addDataPointsDialogViewModel,
+                            globalNoteDialogViewModel = globalNoteDialogViewModel
+                        )
+                    }
+                }
             }
         }
-
-        listenToFeatureNameProvider()
-
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,64 +93,5 @@ class NotesFragment : Fragment() {
             NavButtonStyle.MENU,
             getString(R.string.notes)
         )
-    }
-
-    private fun listenToFeatureNameProvider() {
-        viewModel.featureNameProvider.observe(viewLifecycleOwner) {
-            initListAdapter(it)
-            listenToNotes()
-        }
-    }
-
-    private fun listenToNotes() {
-        viewModel.notes.observe(viewLifecycleOwner) { notes ->
-            if (notes == null) return@observe
-            if (notes.isNotEmpty()) binding.noNotesHintText.visibility = View.GONE
-            else binding.noNotesHintText.visibility = View.VISIBLE
-            adapter.submitList(notes)
-        }
-        viewModel.onNoteInsertedTop.observe(viewLifecycleOwner) {
-            if (it) binding.notesList.postDelayed({
-                binding.notesList.smoothScrollToPosition(0)
-            }, 100)
-        }
-    }
-
-    private fun initListAdapter(featurePathProvider: FeaturePathProvider) {
-        adapter = NoteListAdapter(
-            NoteClickListener(
-                this::onNoteClicked,
-                this::onEditNote,
-                this::onDeleteNote
-            ),
-            getWeekDayNames(requireContext()),
-            featurePathProvider
-        )
-        binding.notesList.adapter = adapter
-        binding.notesList.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-    }
-
-    private fun onNoteClicked(note: DisplayNote) {
-        val featurePath = note.featureId?.let {
-            viewModel.featureNameProvider.value?.getPathForFeature(it)
-        } ?: note.featureName
-        showNoteDialog(layoutInflater, requireContext(), note, featurePath)
-    }
-
-    private fun onDeleteNote(note: DisplayNote) {
-        viewModel.deleteNote(note)
-    }
-
-    private fun onEditNote(note: DisplayNote) =
-        note.trackerId?.let { showEditDataPointDialog(it, note) }
-            ?: showEditGlobalNoteDialog(note)
-
-    private fun showEditGlobalNoteDialog(note: DisplayNote) {
-        globalNoteDialogViewModel.openDialog(note.timestamp)
-    }
-
-    private fun showEditDataPointDialog(trackerId: Long, note: DisplayNote) {
-        addDataPointsDialogViewModel.showAddDataPointDialog(trackerId, note.timestamp)
     }
 }

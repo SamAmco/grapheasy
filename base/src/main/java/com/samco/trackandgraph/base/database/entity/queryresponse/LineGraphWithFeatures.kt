@@ -18,10 +18,10 @@ package com.samco.trackandgraph.base.database.entity.queryresponse
 
 import androidx.room.ColumnInfo
 import androidx.room.Relation
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.YRangeType
 import com.samco.trackandgraph.base.database.entity.LineGraph
 import com.samco.trackandgraph.base.database.entity.LineGraphFeature
-import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.TemporalAmount
 
 internal data class LineGraphWithFeatures(
@@ -47,7 +47,7 @@ internal data class LineGraphWithFeatures(
     val yTo: Double,
 
     @ColumnInfo(name = "end_date")
-    val endDate: OffsetDateTime?
+    val endDate: GraphEndDate
 ) {
     fun toDto() = com.samco.trackandgraph.base.database.dto.LineGraphWithFeatures(
         id,

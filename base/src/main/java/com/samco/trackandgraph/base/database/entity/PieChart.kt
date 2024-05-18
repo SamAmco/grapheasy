@@ -20,6 +20,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.database.dto.PieChart
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.TemporalAmount
@@ -54,17 +55,17 @@ internal data class PieChart(
     val sampleSize: TemporalAmount?,
 
     @ColumnInfo(name = "end_date")
-    val endDate: OffsetDateTime?,
+    val endDate: GraphEndDate?,
 
     @ColumnInfo(name = "sum_by_count")
     val sumByCount: Boolean
 ) {
     fun toDto() = PieChart(
-        id,
-        graphStatId,
-        featureId,
-        sampleSize,
-        endDate,
-        sumByCount
+        id = id,
+        graphStatId = graphStatId,
+        featureId = featureId,
+        sampleSize = sampleSize,
+        endDate = endDate ?: GraphEndDate.Latest,
+        sumByCount = sumByCount
     )
 }

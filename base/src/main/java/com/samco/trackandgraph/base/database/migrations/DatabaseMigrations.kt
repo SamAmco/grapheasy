@@ -43,5 +43,6 @@ val allMigrations = arrayOf(
     MIGRATION_51_52,
     MIGRATION_52_53,
     MIGRATION_53_54,
+    MIGRATION_54_55
 )
 

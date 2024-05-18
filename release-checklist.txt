@@ -26,8 +26,10 @@ or for release:
 
 7. Wait for the upload to complete and then build an apk for the release (using Android Studio) .. Typically android studio deletes the aab when you start the apk build (hence why you might want to wait)
 
-8. Commit everything and merge the release/hotfix branch back into master
+8. PUSH THE RELEASE BRANCH (and never delete it otherwise the faq link won't work for that version)
 
-9. Tag the commit e.g. rc-v1.0.0 for release candidate or v1.0.0 for release (you only want to tag once google play has accepted the upload) as F-droid uses these tags for its own releases
+9. Commit everything and merge the release/hotfix branch back into master
 
-10. On GitHub create a new release using the new tag and attatch the apk to it. Also copy the release notes in here.
+10. Tag the commit e.g. rc-v1.0.0 for release candidate or v1.0.0 for release (you only want to tag once google play has accepted the upload) as F-droid uses these tags for its own releases
+
+11. On GitHub create a new release using the new tag and attatch the apk to it. Also copy the release notes in here.

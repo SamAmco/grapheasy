@@ -145,11 +145,13 @@ class AddTrackerViewModelImpl @Inject constructor(
         existingTracker = tracker
         trackerName = TextFieldValue(tracker.name, TextRange(tracker.name.length))
         trackerDescription = TextFieldValue(tracker.description, TextRange(tracker.name.length))
+
         isDurationModeFlow.value = tracker.dataType == DataType.DURATION
         hasDefaultValue.value = tracker.hasDefaultValue
-
         val defaultValueStr = tracker.defaultValue.toString()
-        defaultValue = TextFieldValue(defaultValueStr, TextRange(defaultValueStr.length))
+        if (isDurationModeFlow.value) setDurationFromDouble(tracker.defaultValue)
+        else defaultValue = TextFieldValue(defaultValueStr, TextRange(defaultValueStr.length))
+
         defaultLabel = TextFieldValue(tracker.defaultLabel, TextRange(tracker.defaultLabel.length))
         suggestionType.value = tracker.suggestionType
         suggestionOrder.value = tracker.suggestionOrder

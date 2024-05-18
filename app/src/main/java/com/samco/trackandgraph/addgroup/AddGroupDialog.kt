@@ -43,6 +43,7 @@ fun AddGroupDialog(viewModel: AddGroupDialogViewModel, onDismissRequest: () -> U
         DialogTheme {
 
             val addEnabled = viewModel.addEnabled.collectAsStateWithLifecycle().value
+            val updateMode = viewModel.updateMode.collectAsStateWithLifecycle().value
 
             CustomConfirmCancelDialog(
                 onDismissRequest = { onDismissRequest() },
@@ -51,7 +52,7 @@ fun AddGroupDialog(viewModel: AddGroupDialogViewModel, onDismissRequest: () -> U
                     onDismissRequest()
                 },
                 customWidthPercentage = 0.9f,
-                continueText = R.string.add,
+                continueText = if (updateMode) R.string.update else R.string.add,
                 dismissText = R.string.cancel,
                 continueEnabled = addEnabled,
             ) {

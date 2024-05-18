@@ -95,7 +95,7 @@ class TimeHistogramDataFactory @Inject constructor(
         timeHistogramDataHelper: TimeHistogramDataHelper
     ): List<ITimeHistogramViewData.BarValue>? {
         val sample = dataInteractor.getDataSampleForFeatureId(config.featureId)
-        val dataSample = DataClippingFunction(config.endDate, config.sampleSize)
+        val dataSample = DataClippingFunction(config.endDate.toOffsetDateTime(), config.sampleSize)
             .mapSample(sample)
         val barValues = timeHistogramDataHelper
             .getHistogramBinsForSample(dataSample, config.window, config.sumByCount)

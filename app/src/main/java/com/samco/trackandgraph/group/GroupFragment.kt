@@ -208,15 +208,6 @@ class GroupFragment : Fragment(),
         val activity = (requireActivity() as MainActivity)
         args.groupName?.let { activity.setActionBarConfig(NavButtonStyle.UP, it) }
             ?: run { activity.setActionBarConfig(NavButtonStyle.MENU) }
-
-        /**
-         * Call onResume() to all children.
-         * Some children contains sentences like "X time ago", and need to be updated when the app is resumed.
-         * However, the precision is at the minute level, and calling update() each second seems overkill.
-         */
-        for (i in 0..(binding.itemList.adapter?.itemCount ?: 0)) {
-            (binding.itemList.findViewHolderForAdapterPosition(i) as GroupChildViewHolder?)?.onResume()
-        }
     }
 
     private fun createGroupClickListener() = GroupClickListener(

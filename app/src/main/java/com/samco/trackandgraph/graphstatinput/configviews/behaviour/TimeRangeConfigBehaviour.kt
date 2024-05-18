@@ -19,9 +19,9 @@ package com.samco.trackandgraph.graphstatinput.configviews.behaviour
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.graphstatinput.customviews.GraphStatSampleSize
 import com.samco.trackandgraph.graphstatinput.customviews.SampleEndingAt
-import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.TemporalAmount
 import javax.inject.Inject
 
@@ -48,10 +48,10 @@ class TimeRangeConfigBehaviourImpl @Inject constructor() : TimeRangeConfigBehavi
 
     fun onConfigLoaded(
         sampleSize: TemporalAmount?,
-        endingAt: OffsetDateTime?
+        endingAt: GraphEndDate?
     ) {
         sampleSize?.let { selectedDuration = GraphStatSampleSize.fromTemporalAmount(it) }
-        endingAt?.let { sampleEndingAt = SampleEndingAt.fromDateTime(it) }
+        endingAt?.let { sampleEndingAt = SampleEndingAt.fromGraphEndDate(it) }
     }
 
     override fun updateDuration(duration: GraphStatSampleSize) {

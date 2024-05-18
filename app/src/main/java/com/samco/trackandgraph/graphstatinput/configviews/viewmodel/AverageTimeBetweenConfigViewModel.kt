@@ -19,6 +19,7 @@ package com.samco.trackandgraph.graphstatinput.configviews.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.samco.trackandgraph.R
 import com.samco.trackandgraph.base.database.dto.AverageTimeBetweenStat
+import com.samco.trackandgraph.base.database.dto.GraphEndDate
 import com.samco.trackandgraph.base.model.DataInteractor
 import com.samco.trackandgraph.base.model.di.DefaultDispatcher
 import com.samco.trackandgraph.base.model.di.IODispatcher
@@ -73,7 +74,7 @@ class AverageTimeBetweenConfigViewModel @Inject constructor(
         toValue = 1.0,
         sampleSize = null,
         labels = listOf(),
-        endDate = null,
+        endDate = GraphEndDate.Latest,
         filterByRange = false,
         filterByLabels = false
     )
@@ -85,7 +86,7 @@ class AverageTimeBetweenConfigViewModel @Inject constructor(
             toValue = toValue.text.toDoubleOrNull() ?: 1.0,
             sampleSize = selectedDuration.temporalAmount,
             labels = selectedLabels,
-            endDate = sampleEndingAt.asDateTime(),
+            endDate = sampleEndingAt.asGraphEndDate(),
             filterByRange = filterByRange,
             filterByLabels = filterByLabel
         )
