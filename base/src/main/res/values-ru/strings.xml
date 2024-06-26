@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ This file is part of Track & Graph
+  ~ 
+  ~ Track & Graph is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~ 
+  ~ Track & Graph is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~ 
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Track & Graph.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="home">Домой</string>
+    <string name="add_group">Добавить группу: </string>
+    <string name="edit_group">Изменить группу: </string>
+    <string name="group">Группа</string>
+    <string name="tracker">Трекер</string>
+    <string name="graph_or_stat">График или статистика</string>
+    <string name="add_tracker">Отслеживать что-либо:</string>
+    <string name="add">Добавить</string>
+    <string name="group_name">Например, Ежедневные активности</string>
+    <string name="delete">Удалить</string>
+    <string name="edit">Изменить</string>
+    <string name="update">Обновить</string>
+    <string name="graph_or_stat_name">Названия графика: </string>
+    <string name="tracker_name">Название трекера</string>
+    <string name="tracker_type">Это время или период</string>
+    <string name="yes">Да</string>
+    <string name="cancel">Отмена</string>
+    <string name="select_file">Выбрать файл</string>
+    <string name="empty_group_hint">Добро пожаловать в Track &amp; Graph!\n\n Нажмите + справа сверху и выберите трекер, чтобы начать.</string>
+    <string name="no_trackers_graph_stats_hint">Пожалуйста, создайте Трекер перед созданием графиков.</string>
+    <string name="ru_sure_del_group">Вы действительно хотите удалить группу и всё внутри неё? Вы не сможете это отменить.</string>
+    <string name="ru_sure_del_graph">Вы действительно хотите удалить график? Вы не сможете это отменить. Вы не потеряете отслеживаемые данные.</string>
+    <string name="ru_sure_del_feature">Вы действительно хотите удалить эти отслеживаемые данные?</string>
+    <string name="ru_sure_del_data_point">Вы действительно хотите удалить эту точку данных?</string>
+    <string name="export_file_name_suffix" translatable="false">%1$s-%2$s-%3$04d%4$02d%5$02d-%6$02d%7$02d%8$02d.csv</string>
+    <string name="backup_file_name_suffix" translatable="false">%1$s-%2$04d%3$02d%4$02d-%5$02d%6$02d%7$02d.db</string>
+    <string name="tracker_name_cannot_be_null">Пожалуйста, введите название</string>
+    <string name="tracker_with_that_name_exists">Вы уже отслеживаете что-то с этим названием</string>
+    <string name="data_points">%1$d отслеживается</string>
+    <string name="no_data">Нет данных</string>
+    <string name="skip">Пропустить</string>
+    <string name="exportButton">Экспортировать</string>
+    <string name="importButton">Импортировать</string>
+    <string name="export_to">Экспортировать отслеживаемые данные из этой группы в CSV:</string>
+    <string name="import_from">Импортировать отслеживаемые данные в эту группу из CSV:</string>
+    <string name="import_warning">Внимание: Импорт неотменяет. Track &amp; Graph попытается объединить импортируемые данные и существующие данные.</string>
+    <string name="add_a_graph_or_stat">Добавить график или статистику</string>
+    <string name="graph_type_label">Тип графика:</string>
+    <string name="sample_size">Размер:</string>
+    <string name="select_a_discrete_feature">Выбрать набор данных с этими подписями: </string>
+    <string name="no_labels">Этот набор данных не имеет подписей</string>
+    <string name="select_a_feature">Выбрать набор данных:</string>
+    <string name="offset">Сдвиг:</string>
+    <string name="scale">Масштаб:</string>
+    <string name="from">От:</string>
+    <string name="to">До:</string>
+    <string name="day">День</string>
+
+    <string-array name="time_histogram_windows">
+        <item>Ежечасно</item>
+        <item>Ежедневно</item>
+        <item>Еженедельно</item>
+        <item>Ежемесячно</item>
+        <item>Ежесезонно</item>
+        <item>Ежеполугодно</item>
+        <item>Ежегодно</item>
+    </string-array>
+    <string-array name="date_formats">
+        <item>день/месяц/год</item>
+        <item>месяц/день/год</item>
+        <item>год/месяц/день</item>
+    </string-array>
+    <string-array name="theme_names_pre_Q">
+        <item>Режим энергосбережения</item>
+        <item>Светлая</item>
+        <item>Тёмная</item>
+    </string-array>
+    <string-array name="theme_names_Q">
+        <item>Системная</item>
+        <item>Светлая</item>
+        <item>Тёмная</item>
+    </string-array>
+    <string name="graph_type_line_graph">Линейный график</string>
+    <string name="graph_type_pie_chart">Круговая диаграмма</string>
+    <string name="graph_type_average_time_between">Наибольшее время между</string>
+    <string name="graph_type_time_since">Время с</string>
+    <string name="graph_type_time_histogram">Временная хистограмма</string>
+    <string name="graph_type_last_value">Последнее отслеживаемое/Времени с</string>
+    <string name="graph_type_bar_chart">Столбчатая диаграмма</string>
+
+    <string-array name="line_graph_averaging_mode_names">
+        <item>Не наибольший</item>
+        <item>Дневной подвижный наибольший</item>
+        <item>Трёх-дневный подвижный наибольший</item>
+        <item>Недельный подвижный наибольший</item>
+        <item>Месячный подвижный наибольший</item>
+        <item>Трёх-месячный подвижный наибольший</item>
+        <item>Шести-месячный подвижный наибольший</item>
+        <item>Годовой подвижный наибольший</item>
+    </string-array>
+    <string-array name="line_graph_plot_mode_names">
+        <item>Участок когда отслеживается</item>
+        <item>Участок общего за час</item>
+        <item>Участок общего за день</item>
+        <item>Участок общего за неделю</item>
+        <item>Участок общего за месяц</item>
+        <item>Участок общего за год</item>
+    </string-array>
+    <string name="graph_time_durations_all_data">Все данные</string>
+    <string name="graph_time_durations_a_day">День</string>
+    <string name="graph_time_durations_a_week">Неделя</string>
+    <string name="graph_time_durations_a_month">Месяц</string>
+    <string name="graph_time_durations_three_months">Три месяца</string>
+    <string name="graph_time_durations_six_months">Шесть месяцев</string>
+    <string name="graph_time_durations_a_year">Год</string>
+    <string name="custom">Свой</string>
+    <string-array name="y_range_styles">
+        <item>Динамический</item>
+        <item>Фиксированный</item>
+    </string-array>
+
+    <string name="ending_at_latest">Последняя точка данных</string>
+    <string name="ending_at_now">Сейчас</string>
+    <string name="ending_at_custom_date">Своя дата…</string>
+
+    <string name="hours_and_minutes_ago">%1$dh %2$dm назад</string>
+
+    <string name="import_exception_unknown">Импорт не удался: Произошла неизвестная ошибка</string>
+    <string name="import_exception_bad_headers">Импорт не удался: Заголовки не соответствуют ожидаемым заголовкам: %1$s</string>
+    <string name="import_exception_inconsistent_record">Импорт не удался: Записть в строке %1$s не соответствует заданным заголовкам</string>
+    <string name="import_exception_bad_timestamp">Импорт не удался: Не получилось интерпретировать временную метку в записи: %1$s</string>
+    <string name="import_exception_inconsistent_data_type">Импорт не удался: Получен несовместимый тип данных в записи: %1$s</string>
+
+    <string name="graph_stat_validation_unknown">Произошла неизвестная ошибка</string>
+    <string name="graph_stat_validation_no_name">Пожалуйста, введите название</string>
+    <string name="graph_stat_validation_no_line_graph_features">Пожалуйста, добавьте что-нибудь в граф</string>
+    <string name="graph_stat_validation_invalid_value_stat_from_to">Пожалуйста, удостоверьтесь, что "От" меньше или равен "До"</string>
+    <string name="graph_stat_validation_unrecognised_color">Пожалуйста, удостоверьтесь, что у каждого набора данных есть цвет</string>
+    <string name="graph_stat_validation_invalid_line_graph_feature">Недопустимые данные в графике были обнаружены</string>
+    <string name="graph_stat_validation_bad_fixed_range">Пожалуйста, удостоверьтесь, что "От" меньше "До"</string>
+
+    <string name="graph_stat_view_not_found">Произошла ошибка просмотра этого графика</string>
+    <string name="graph_stat_view_not_enough_data_stat">Эта статистика будет показана, когда будет собрано достаточно данных для генерации.</string>
+    <string name="graph_stat_view_not_enough_data_graph">Этот график будет показан, когда будет собрано достаточно данных для генерации.</string>
+    <string name="finish">Закончить</string>
+    <string name="about_description"><![CDATA[Track & Graph это открытое и свободное ПО под лицензией GPL 3.0 License.]]></string>
+    <string name="github_link">https://github.com/SamAmco/track-and-graph</string>
+    <string name="play_store_page_link">https://play.google.com/store/apps/details?id=com.samco.trackandgraph</string>
+    <string name="github_link_friendly">github.com/SamAmco/track-and-graph</string>
+    <string name="about_libraries_message">Следующие открытые библиотеки были использованы:</string>
+    <string name="androidplot" translatable="false">Androidplot</string>
+    <string name="apache_2_0" translatable="false">Apache 2.0</string>
+    <string name="apache_commons_csv" translatable="false">Apache Commons CSV</string>
+    <string name="three_ten_android_backport" translatable="false">Three Ten Android Backport</string>
+    <string name="timber" translatable="false">Timber</string>
+    <string name="about">О нас</string>
+    <string name="nav_header_title"><![CDATA[Track & Graph]]></string>
+
+    <string name="faq">ЧАВО</string>
+    <string name="tutorial_text_1">Используйте трекеры для отслеживания ваших данных.</string>
+    <string name="tutorial_text_2">Используйте графику или статистику для просмотра данных.</string>
+    <string name="tutorial_text_3">Используйте группы, чтобы огранизовать ваши трекеры, графы и статистику.</string>
+    <string name="got_it">Ясно!</string>
+    <string name="move_to_colon">Перейти к:</string>
+    <string name="move_to">Перейти к</string>
+
+    <string name="ru_sure_update_data">Это обновление может безвозвратно изменить данные, которые вы уже отслеживали. Рекомендуем сделать резервную копию данных перед продолжением.\n\n Хотите продолжить?</string>
+    <string name="ok">Окей</string>
+
+    <string name="rate_the_app">Оцените приложение</string>
+    <string name="reminders">Напоминания</string>
+    <string name="no_reminders_hint">Нажмите на иконку +, чтобы создать напоминание об отслеживании.</string>
+    <string name="mon">ПН</string>
+    <string name="tue">ВТ</string>
+    <string name="wed">СР</string>
+    <string name="thu">ЧТ</string>
+    <string name="fri">ПТ</string>
+    <string name="sat">СБ</string>
+    <string name="sun">ВС</string>
+    <string name="reminders_notifications_channel_name">Напоминания</string>
+    <string name="reminders_notifications_channel_description">Пользователь создал уведомление, чтобы напомнить об отслеживании</string>
+    <string name="default_reminder_name">Время отслеживания!</string>
+    <string name="range_style">Стиль диапазона:</string>
+
+    <string name="track_widget_configure_no_data_error">Пожалуйста, отследите данные.</string>
+    <string name="track_widget_configure_no_data_selected_error">Вы должны выбрать существующий набор данных, чтобы создать виджет.</string>
+    <string name="create">Создать</string>
+    <string name="use_default_value">Установить значение по умолчанию</string>
+    <string name="backup_and_restore">Резервная копия и восстановление</string>
+    <string name="backup_hint_text">Резервная копия сохраняет все данные приложения, включая данные, графики и напоминания. Вы должны сохранять ваши данные на другом устройстве или облачном хранилище регулярно, чтобы избежать потери данных при поломке или утере устройства.</string>
+    <string name="restore_data">Восстановить данные</string>
+    <string name="backup_successful">Резервная копия удалась!</string>
+    <string name="backup_error_could_not_write_to_file">Не удалось найти или записать данный файл.</string>
+    <string name="backup_error_could_not_find_database_file">Не удалось найти или прочитать базу данных.</string>
+    <string name="backup_error_failed_to_copy_database">Что-то произошло при копировании базы данных.</string>
+    <string name="restore_failed">Восстановление не удалось. %1$s</string>
+    <string name="add_a_longer_description_optional">Добавьте длинное описания (не обязательно)</string>
+    <string name="no_data_points_history_fragment_hint">Ваша история отслеживания будет показана здесь, когда вы введёте данные.</string>
+    <string name="info">Информация</string>
+    <string name="no_description">Нет описания</string>
+    <string name="description">Описание</string>
+    <string name="note_input_hint">Заметки…</string>
+    <string name="add_a_note">Добавить заметку</string>
+    <string name="notes">Заметки</string>
+    <string name="delete_reminder_content_description">Удалить напоминание</string>
+    <string name="theme_colon">Тема:</string>
+    <string name="date_format_colon">Формат даты:</string>
+    <string name="add_data_point_button_content_description">Кнопка добавления точки данных</string>
+    <string name="tracked_data_menu_button_content_description">Кнопка меню отслеживаемых данных</string>
+    <string name="tracked_data_history_button_content_description">Кнопка истории отслеживаемых данных</string>
+    <string name="delete_line_button_content_description">Кнопка удаления строки</string>
+    <string name="delete_data_point_button_content_description">Кнопка удаления точки данных</string>
+    <string name="edit_data_point_button_content_description">Кнопка изменения точки данных</string>
+    <string name="add_multiple_choice_answer_button_content_description">Кнопка добавления выбора нескольких ответов</string>
+    <string name="ending_at_colon">Образец заканчивается на:</string>
+    <string name="duplicate">Дублировать</string>
+    <string name="no_notes_hint_text">Заметки, добавленные при отслеживании, будут показаны здесь. Вы также можете добавить глобальные заметки с помощью кнопки +.</string>
+    <string name="add_a_global_note">Добавить глобальную заметку:</string>
+    <string name="weeks">Недели</string>
+    <string name="months">Месяцы</string>
+    <string name="days">Дни</string>
+    <string name="hours">Часы</string>
+    <string name="minutes">Минуты</string>
+    <string name="seconds">Секунды</string>
+    <string name="hours_suffix">ч</string>
+    <string name="minutes_suffix">м</string>
+    <string name="seconds_suffix">с</string>
+    <string name="numeric_to_duration_mode_header">Ранее отслеживаемые значения представляют:</string>
+    <string name="duration_to_numeric_mode_header">Во что должны быть сконвертированы ранее отслеживаемые значения:</string>
+    <string name="graph_stat_validation_mixed_time_value_line_graph_features">Вы не можете смешивать временную длительность с другими типами. Рассмотрите использование часов, минут и секунд</string>
+    <string name="sum_by_count_checkbox_label">Выделите, чтобы посчитать количество точек данных вместо суммы их значений.</string>
+    <string name="time_window_size">Размер временного окна:</string>
+    <string name="moshi" translatable="false">Moshi</string>
+    <string name="hold_to_preview">Удерживайте для предпросмотра</string>
+    <string name="open">Открыть</string>
+    <string name="close">Закрыть</string>
+    <string name="filter_by_label">Отфильтровать по метке</string>
+    <string name="filter_by_value">Отфильтровать по диапазону значений</string>
+    <string name="save_changes">Сохранить изменения</string>
+    <string name="timer_notification_channel_name">Таймеры</string>
+    <string name="stop">Остановить</string>
+    <string name="add_function">Добавить функцию</string>
+    <string name="name_your_function">Назовите вашу функцию: </string>
+    <string name="write_your_function_here"># Напишите вашу функцию здесь</string>
+    <string name="add_some_data_sources">Добавьте несколько источников данных</string>
+    <string name="value">Значение</string>
+    <string name="label">Метка</string>
+    <string name="continue_word">Продолжить</string>
+    <string name="update_all_data_points">Обновить все точки данных: </string>
+    <string name="where_colon">Где:</string>
+    <string name="to_colon">До:</string>
+    <string name="value_equals">Значение =</string>
+    <string name="label_equals">Метка =</string>
+    <string name="adding_your_first_data_point">Быстрое обучение по добавлению точек данных:</string>
+    <string name="next">Следующий</string>
+    <string name="each_data_point_has_a_timestamp_and_value">Каждая точка данных имеет временную метку и значение: </string>
+    <string name="it_can_also_optionally_have_a_label_and_a_note">Также, по желанию, вы можете добавить метку и заметку: </string>
+    <string name="data_point_tutorial_page_2_description">Значение это число, так что вы можете видеть как изменяются ваши данные со временем</string>
+    <string name="data_point_tutorial_page_2_hint">(Подсказка: Если вы не беспокоитесь о значении, просто используйте значение 1 по умолчанию)</string>
+    <string name="data_point_tutorial_page_3_description">Используйте метки, чтобы сгрупировать точки данных</string>
+    <string name="data_point_tutorial_page_3_hint">(Подсказка: Если вы хотите добавить больше контекста или описани, используйте заметки вместо поля метки)</string>
+    <string name="help">Помощь</string>
+    <string name="faq_page_link" translatable="false">https://github.com/SamAmco/track-and-graph/blob/release/v4.0.3/docs/faq/index.md#faq</string>
+    <string name="faq_page_link_1" translatable="false">https://github.com/SamAmco/track-and-graph/blob/release/v4.0.3/docs/faq/faq_1.md#how-do-i-start-tracking-something</string>
+    <string name="advanced_options">Продвинутые настройки</string>
+    <string name="type_colon">"Тип: "</string>
+    <string name="order_colon">"Порядок: "</string>
+    <string name="value_and_label">Значение и метка</string>
+    <string name="value_only">Только значение</string>
+    <string name="label_only">Только метка</string>
+    <string name="none">Ничего</string>
+    <string name="value_ascending">Значение возрастает</string>
+    <string name="value_descending">Значение убывает</string>
+    <string name="label_ascending">Метка возрастает</string>
+    <string name="label_descending">Метка убывает</string>
+    <string name="latest">Последний</string>
+    <string name="oldest">Первый</string>
+    <string name="track_all">Отслеживать всё</string>
+    <string name="more_details">Больше деталей</string>
+    <string name="suggestions">Предложения</string>
+    <string name="no_label">Нет метки</string>
+    <string name="confirm_cancel_notes_will_be_lost">Вы действительно хотите закрыть? Все заметки будут утеряны.</string>
+    <string name="add_a_label">Добавить метку</string>
+    <string name="bar_interval">Интервал между планками</string>
+
+    <string name="y_range_max">Максимальный диапазон Y</string>
+    <string name="total_formatted">Итого: %s</string>
+    <string name="from_formatted">Из: %s</string>
+    <string name="to_formatted">В: %s</string>
+
+    <string name="seconds_generic">Секунд(а/ы)</string>
+    <string name="minutes_generic">Минут(а/ы)</string>
+    <string name="hours_generic">Час(ов)</string>
+    <string name="days_generic">День(Дней)</string>
+    <string name="weeks_generic">Недель(и)</string>
+    <string name="months_generic">Месяц(ев)</string>
+    <string name="years_generic">Год(Лет)</string>
+
+    <plurals name="seconds">
+        <item quantity="one">%d Секунда</item>
+        <item quantity="other">%d Секунды</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">%d Минута</item>
+        <item quantity="other">%d Минуты</item>
+    </plurals>
+
+    <plurals name="hours">
+        <item quantity="one">%d Час</item>
+        <item quantity="other">%d Часов</item>
+    </plurals>
+
+    <plurals name="days">
+        <item quantity="one">%d День</item>
+        <item quantity="other">%d Дней</item>
+    </plurals>
+
+    <plurals name="weeks">
+        <item quantity="one">%d Неделя</item>
+        <item quantity="other">%d Недель</item>
+    </plurals>
+
+    <plurals name="months">
+        <item quantity="one">%d Месяц</item>
+        <item quantity="other">%d Месяцев</item>
+    </plurals>
+
+    <plurals name="years">
+        <item quantity="one">%d Год</item>
+        <item quantity="other">%d Лет</item>
+    </plurals>
+
+    <string name="restore_hint_text">ВНИМАНИЕ: Восстановление из резервной копии сотрёт все данные и установит прямо в приложение. Вы должны сначала сделать резервную копию данных!</string>
+    <string name="backup_now">Сделать резервную копию сейчас</string>
+    <string name="restore_error_could_not_write_to_database">Восстановление не удалось! Не удалось найти или записать базу данных.</string>
+    <string name="restore_error_could_not_read_from_database_file">Восстановление не удалось! Не удалось найти или прочитать выбранный файл базы данных.</string>
+    <string name="restore_error_failed_to_copy_database">Восстановление не удалось! Что-то пошло не так при восстановлении базы данных.</string>
+    <string name="select_location">Выберите путь…</string>
+    <string name="restore_successful">Восстановление удалось! Track &amp; Graph должен быть перезапущен.</string>
+    <string name="restore_error_invalid_database_file">Восстановление не удалось! Выбранный файл не является действительной резервной копией.</string>
+    <string name="auto_backup">Автоматическая резервная копия</string>
+    <string name="apply">Применить</string>
+    <string name="backup_every">Копировать раз в: </string>
+    <string name="next_backup_at">"Следующее копирование в: "</string>
+    <string name="backup_notification_channel_name">Уведомления об автоматических резервных копиях</string>
+    <string name="backup_notification_channel_description">Даёт вам знать, что резервное копирование прошло успешно или не удалось.</string>
+    <string name="backup_notification_title">Копирование в процессе…</string>
+    <string name="backup_failed_notification_title">Автоматическая резервная копия не удалась</string>
+    <string name="backup_failed_notification_could_not_write_to_file">Track &amp; Graph не смог получить или найти путь к резервной копии.</string>
+    <string name="backup_failed_notification_could_not_copy">Что-то пошло не так при резевном копировании. Ваша резервная копия была испорчена или не завершена.</string>
+    <string name="default_auto_backup_file_name">TrackAndGraphКопия.db</string>
+    <string name="select_new_location">Выбрать новое место</string>
+    <string name="backup_location">Место резервной копии</string>
+    <string name="enable_auto_backup">Включить автоматическую резервную копию</string>
+    <string name="last_successful_backup">Последняя удачная копия</string>
+    <string name="next_scheduled_backup">Следующая запланированная копия</string>
+    <string name="notification_permission_prompt">Вы должны включить уведомления от Track &amp; Graph чтобы знать об автоматической копии и о том, что копирование не удалось.</string>
+</resources>
